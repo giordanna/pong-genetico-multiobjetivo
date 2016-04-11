@@ -71,6 +71,20 @@ public class Raquete {
         return Math.min(Math.max(valor, min), max);
     }
     
+    public int distancia(Bola bola){
+        int dist;
+        
+        //esquerda
+        if (numero_raquete == 1){
+            dist = Math.abs(bola.getX() - this.x);
+        }
+        else{ // direita
+            dist = Math.abs(this.x - bola.getX());
+        }
+        
+        return dist;
+    }
+    
     // TESTAR
     public void mover(int velocidade) {
         this.y = determinaLimite(y, 0, Configuracao.ALTURA_TELA - this.altura);

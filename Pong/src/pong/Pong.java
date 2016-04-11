@@ -116,6 +116,7 @@ public class Pong implements ActionListener, KeyListener {
         bolas = new Bola [5];
         for (int i = 0 ; i < 5 ; i++)
             bolas[i] = new Bola(pong);
+        bolas[0].setEspecial();
     }
     
     // escreve o texto centralizado

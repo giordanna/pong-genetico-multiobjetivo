@@ -16,7 +16,7 @@ import pong.Outros.Configuracao;
 import pong.Raquete;
 
 public class Treinador implements IJogador {
-    private static int MAIOR_FITNESS = 9999;
+    private static int MAIOR_FITNESS = 1000;
     private static int qtd_treinador = 0;
     private int treinador;
     private Genotipo populacao[];
@@ -102,14 +102,17 @@ public class Treinador implements IJogador {
     
     @Override
     public int verificaDirecao(Raquete minha, Raquete oponente, Bola[] bolas) {
-        int vel = 0;
+        int min_indice = 0;
+        int min_distancia = Integer.MAX_VALUE, distancia;
         
-        for (Bola bola : bolas) {
-            vel += verificaDirecao(minha, oponente, bola);
+        for (int i = 0 ; i < bolas.length ; i++) {
+            distancia = minha.distancia(bolas[i]);
+            if (distancia < min_distancia){
+                min_indice = i;
+            }
         }
         
-        vel /= bolas.length;
-        return vel;
+        return verificaDirecao(minha,oponente, bolas[min_indice]);
     }
     
     // cálculo do fitness

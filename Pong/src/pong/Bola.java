@@ -7,6 +7,8 @@ import pong.Outros.Configuracao;
 public class Bola {
 
     private int x, y, largura = Configuracao.BOLA_RAIO, altura = largura;
+    
+    private boolean especial = false;
 
     private int movimentoX, movimentoY;
 
@@ -33,6 +35,10 @@ public class Bola {
     public int getMovimentoX() { return movimentoX; }
     
     public int getMovimentoY() { return movimentoY; }
+    
+    public void setEspecial(){
+        especial = true;
+    }
 
     public int atualizarBola(Raquete raquete1, Raquete raquete2) {
         int velocidade = Configuracao.MAX_VELOCIDADE_BOLA;
@@ -97,7 +103,7 @@ public class Bola {
         this.x = pong.largura / 2 - this.largura / 2;
         this.y = pong.altura / 2 - this.altura / 2;
 
-        this.movimentoY = -2 + Configuracao.R.nextInt(4);
+        this.movimentoY = -3 + Configuracao.R.nextInt(6);
 
         if (movimentoY == 0) {
             movimentoY = 1;
@@ -140,8 +146,14 @@ public class Bola {
     }
 
     public void renderizarBola(Graphics g) {
-        g.setColor(Color.WHITE);
-        g.fillOval(x, y, largura, altura);
+        if (especial){
+            g.setColor(Color.GREEN);
+            g.fillOval(x, y, largura, altura);
+        }
+        else{
+            g.setColor(Color.WHITE);
+            g.fillOval(x, y, largura, altura);
+        }
     }
     
     
