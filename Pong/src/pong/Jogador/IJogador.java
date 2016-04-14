@@ -15,4 +15,6 @@ public interface IJogador {
     public void resultado(int ponto_meu, int ponto_oponente);
 
     public int verificaDirecao(Raquete minha, Raquete oponente, Bola[] bolas);
+    
+    public Raquete getRaquete();
 }

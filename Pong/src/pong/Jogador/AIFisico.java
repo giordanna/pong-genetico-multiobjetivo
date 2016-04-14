@@ -6,7 +6,17 @@ import pong.Bola;
 import pong.Outros.Configuracao;
 import pong.Raquete;
 
-public class AIPerfeito implements IJogador {
+public class AIFisico implements IJogador {
+    
+    private Raquete raquete;
+    
+    public AIFisico() {}
+    
+    public AIFisico(int numero){
+        raquete = new Raquete(numero);
+    }
+    
+    public Raquete getRaquete() { return raquete; }
     
 
     @Override
@@ -43,6 +53,7 @@ public class AIPerfeito implements IJogador {
             distancia = minha.distancia(bolas[i]);
             if (distancia < min_distancia){
                 min_indice = i;
+                min_distancia = distancia;
             }
         }
         

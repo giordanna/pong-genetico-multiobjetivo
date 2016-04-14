@@ -29,7 +29,8 @@ public class Treinador implements IJogador {
     private int pontos_jogador = 0, pontos_adversario = 0, total = 0;
     private int geracao = 1;
     private Writer output_fitness, output_genotipo, output_placar;
-    
+    private Raquete raquete;
+
     public Treinador() throws IOException{
         qtd_treinador++;
         treinador = qtd_treinador;
@@ -60,6 +61,13 @@ public class Treinador implements IJogador {
         
         inicializaPopulacao();
     }
+    
+    public Treinador(int numero) throws IOException{
+        this();
+        raquete = new Raquete(numero);
+    }
+    
+    public Raquete getRaquete() { return raquete; }
     
     public void inicializaPopulacao(){
         populacao = new Genotipo[Configuracao.MAX_POPULACAO];
@@ -109,6 +117,7 @@ public class Treinador implements IJogador {
             distancia = minha.distancia(bolas[i]);
             if (distancia < min_distancia){
                 min_indice = i;
+                min_distancia = distancia;
             }
         }
         

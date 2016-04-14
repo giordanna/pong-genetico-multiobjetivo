@@ -10,6 +10,14 @@ public class AIGenetico implements IJogador {
     
     private Genotipo genotipo;
     private int posicao_inicial = Integer.MAX_VALUE;
+    private Raquete raquete;
+    
+    public AIGenetico(Genotipo genotipo, int numero){
+        this.genotipo = genotipo;
+        raquete = new Raquete(numero);
+    }
+    
+    public Raquete getRaquete() { return raquete; }
     
     public AIGenetico( Genotipo genotipo ){
         this.genotipo = genotipo;
@@ -36,6 +44,7 @@ public class AIGenetico implements IJogador {
             distancia = minha.distancia(bolas[i]);
             if (distancia < min_distancia){
                 min_indice = i;
+                min_distancia = distancia;
             }
         }
         

@@ -39,8 +39,6 @@ public class Pong implements ActionListener, KeyListener {
     // dimensões da tela
     public int largura = Configuracao.LARGURA_TELA, altura = Configuracao.ALTURA_TELA;
 
-    public Raquete raquete_esquerda, raquete_direita; // independentes
-    
     public IJogador jogador_esquerda, jogador_direita; // os que vão ser usados de fato
     
     public IJogador instancias_esquerda[]; // humano, ai basico, ai perfeito, ai genético, treinador
@@ -67,19 +65,19 @@ public class Pong implements ActionListener, KeyListener {
 
     public Pong() throws IOException {
         instancias_esquerda = new IJogador[6];
-        instancias_esquerda[0] = new Humano(KeyEvent.VK_W, KeyEvent.VK_S);
-        instancias_esquerda[1] = new AIBasico();
-        instancias_esquerda[2] = new AIPerfeito();
-        instancias_esquerda[3] = new AIGenetico(Genotipo.genotipoAleatorio(0, 0));
+        instancias_esquerda[0] = new Humano(1);
+        instancias_esquerda[1] = new AIBasico(1);
+        instancias_esquerda[2] = new AIFisico(1);
+        instancias_esquerda[3] = new AIGenetico(Genotipo.genotipoAleatorio(0, 0), 1);
         instancias_esquerda[4] = null;
         instancias_esquerda[5] = null;
         
         
         instancias_direita = new IJogador[6];
-        instancias_direita[0] = new Humano(KeyEvent.VK_UP, KeyEvent.VK_DOWN);
-        instancias_direita[1] = new AIBasico();
-        instancias_direita[2] = new AIPerfeito();
-        instancias_direita[3] = new AIGenetico(Genotipo.genotipoAleatorio(0, 0));
+        instancias_direita[0] = new Humano(2);
+        instancias_direita[1] = new AIBasico(2);
+        instancias_direita[2] = new AIFisico(2);
+        instancias_direita[3] = new AIGenetico(Genotipo.genotipoAleatorio(0, 0), 2);
         instancias_direita[4] = null;
         instancias_direita[5] = null;
         
@@ -90,6 +88,7 @@ public class Pong implements ActionListener, KeyListener {
 
         renderizador = new Renderizador();
         
+        jframe.setResizable(false);
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.add(renderizador);
         jframe.addKeyListener(this);
@@ -109,8 +108,6 @@ public class Pong implements ActionListener, KeyListener {
 
     public void inicializarPong() {
         status_jogo = Jogando;
-        raquete_esquerda = new Raquete(pong, 1);
-        raquete_direita = new Raquete(pong, 2);
         
         //bola = new Bola(pong);
         bolas = new Bola [5];
@@ -129,7 +126,7 @@ public class Pong implements ActionListener, KeyListener {
     
     public void modoMenu(Graphics2D g){
         
-        String[] string = {"Humano", "AI Basico", "AI Perfeito", "AI Genetico", "AI Treinador", "AI Gen. de Arquivo"};
+        String[] string = {"Humano", "AI Basico", "AI Fisico", "AI Genetico", "AI Treinador", "AI Gen. de Arquivo"};
         if (status_jogo == Menu) {
             g.setColor(Color.WHITE);
             g.setFont(Configuracao.FONTE_TIPO.deriveFont(Font.BOLD,50));
@@ -183,10 +180,10 @@ public class Pong implements ActionListener, KeyListener {
             g.setFont(Configuracao.FONTE_TIPO.deriveFont(1,40));
             
             // faz a pontuação
-            escreveTexto(g, String.valueOf(raquete_esquerda.getScore()), -150, 50);
-            escreveTexto(g, String.valueOf(raquete_direita.getScore()), 150, 50);
-            //g.drawString(String.valueOf(raquete_esquerda.getScore()), largura / 2 - 90, 50);
-            //g.drawString(String.valueOf(raquete_direita.getScore()), largura / 2 + 65, 50);
+            escreveTexto(g, String.valueOf(jogador_esquerda.getRaquete().getScore()), -150, 50);
+            escreveTexto(g, String.valueOf(jogador_direita.getRaquete().getScore()), 150, 50);
+            //g.drawString(String.valueOf(jogador_esquerda.getRaquete().getScore()), largura / 2 - 90, 50);
+            //g.drawString(String.valueOf(jogador_direita.getRaquete().getScore()), largura / 2 + 65, 50);
             
             // informa qual o indivíduo atual e a geração caso o jogador da esquerda seja treinador
             if (opcao_jogador_esquerda == 4){
@@ -210,8 +207,8 @@ public class Pong implements ActionListener, KeyListener {
             escreveTexto(g, "Velocidade:" + getVelocidade(), 0, altura - 40);
             
             // aqui que acontece a mágica das raquetes e da bola
-            raquete_esquerda.renderizarRaquete(g);
-            raquete_direita.renderizarRaquete(g);
+            jogador_esquerda.getRaquete().renderizarRaquete(g);
+            jogador_direita.getRaquete().renderizarRaquete(g);
             
             for (int i = 0 ; i < 5 ; i++)
                 bolas[i].renderizarBola(g);
@@ -247,7 +244,7 @@ public class Pong implements ActionListener, KeyListener {
                             i++;
                         }
                     }
-                    instancias_direita[opcao_jogador_direita] = new AIGenetico(new Genotipo(genotipo));
+                    instancias_direita[opcao_jogador_direita] = new AIGenetico(new Genotipo(genotipo), 2);
                 }
                 else{
                     // deu erro: arquivo não existe
@@ -270,7 +267,7 @@ public class Pong implements ActionListener, KeyListener {
                             i++;
                         }
                     }
-                    instancias_esquerda[opcao_jogador_esquerda] = new AIGenetico(new Genotipo(genotipo));
+                    instancias_esquerda[opcao_jogador_esquerda] = new AIGenetico(new Genotipo(genotipo), 1);
                 }
                 else{
                     // deu erro: arquivo não existe
@@ -282,22 +279,22 @@ public class Pong implements ActionListener, KeyListener {
         
         if (opcao_jogador_esquerda == 4) // AI Treinador
             if (instancias_esquerda[opcao_jogador_esquerda] == null){
-                instancias_esquerda[opcao_jogador_esquerda] = new Treinador();
+                instancias_esquerda[opcao_jogador_esquerda] = new Treinador(1);
             }
         
         if (opcao_jogador_direita == 4) // AI Treinador
             if (instancias_direita[opcao_jogador_direita] == null){
-                instancias_direita[opcao_jogador_direita] = new Treinador();
+                instancias_direita[opcao_jogador_direita] = new Treinador(2);
             }
         
         if (opcao_jogador_esquerda == 3){ // AI genético
             if (instancias_esquerda[4] != null)
-                instancias_esquerda[opcao_jogador_esquerda] = new AIGenetico(((Treinador) instancias_esquerda[4]).melhorGenotipo());
+                instancias_esquerda[opcao_jogador_esquerda] = new AIGenetico(((Treinador) instancias_esquerda[4]).melhorGenotipo(), 1);
         }
         
         if (opcao_jogador_direita == 3){ // AI genético
             if (instancias_direita[4] != null)
-                instancias_direita[opcao_jogador_direita] = new AIGenetico(((Treinador) instancias_direita[4]).melhorGenotipo());
+                instancias_direita[opcao_jogador_direita] = new AIGenetico(((Treinador) instancias_direita[4]).melhorGenotipo(), 2);
         }
         
         jogador_esquerda = instancias_esquerda[opcao_jogador_esquerda];
@@ -316,33 +313,33 @@ public class Pong implements ActionListener, KeyListener {
         // humano esquerda
         if (opcao_jogador_esquerda == 0){
             if (w) {
-                raquete_esquerda.mover(true);
+                jogador_esquerda.getRaquete().mover(true);
             }
             if (s) {
-                raquete_esquerda.mover(false);
+                jogador_esquerda.getRaquete().mover(false);
             }
         }
         else{ // então é AI
-            raquete_esquerda.mover(jogador_esquerda.verificaDirecao(
-                    raquete_esquerda, raquete_direita, bolas));
+            jogador_esquerda.getRaquete().mover(jogador_esquerda.verificaDirecao(
+                    jogador_esquerda.getRaquete(), jogador_direita.getRaquete(), bolas));
         }
         
         // humano direita
         if (opcao_jogador_direita == 0){
             if (cima) {
-                raquete_direita.mover(true);
+                jogador_direita.getRaquete().mover(true);
             }
             if (baixo) {
-                raquete_direita.mover(false);
+                jogador_direita.getRaquete().mover(false);
             }
         }
         else{ // então é AI
-            raquete_direita.mover(jogador_direita.verificaDirecao(
-                    raquete_direita, raquete_esquerda, bolas));
+            jogador_direita.getRaquete().mover(jogador_direita.verificaDirecao(
+                    jogador_direita.getRaquete(), jogador_esquerda.getRaquete(), bolas));
         }
         int ponto;
         for (Bola x: bolas){
-            ponto = x.atualizarBola(raquete_esquerda, raquete_direita);
+            ponto = x.atualizarBola(jogador_esquerda.getRaquete(), jogador_direita.getRaquete());
             if (ponto > 0)
                 pontos_esquerda++;
             else if (ponto < 0)
@@ -358,8 +355,8 @@ public class Pong implements ActionListener, KeyListener {
             
             if (jogador_esquerda instanceof Treinador || jogador_direita instanceof Treinador){
                 if (partida == 3 * Configuracao.QUANTIDADE_BOLAS){
-                    raquete_esquerda.resetScore();
-                    raquete_direita.resetScore();
+                    jogador_esquerda.getRaquete().resetScore();
+                    jogador_direita.getRaquete().resetScore();
                     partida = 0;
                 }
             }

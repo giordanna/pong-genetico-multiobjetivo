@@ -6,14 +6,16 @@ import pong.Raquete;
 
 public class Humano implements IJogador {
     
-    // verificar se vai funcionar
-    private int cima, baixo;
+    private Raquete raquete;
     
-    public Humano(int cima, int baixo){
-        this.cima = cima;
-        this.baixo = baixo;
+    public Humano(){}
+    
+    public Humano(int numero){
+        raquete = new Raquete(numero);
     }
     
+    public Raquete getRaquete() { return raquete; }
+
     // não será usado de fato
     @Override
     public int verificaDirecao(Raquete minha, Raquete oponente, Bola bola) {

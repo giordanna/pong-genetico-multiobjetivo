@@ -1,8 +1,7 @@
-# Programando o Jogo Pong Utilizando Algoritmo Genético #
+# Programando o Jogo Pong Utilizando Algoritmo Genético Adaptado para Multiobjetivo #
 
 * Introdução
 * Propostas de Teste
-* Fitness
 
 ### Introdução ###
 
@@ -19,9 +18,3 @@
 * * AI Perfeito realizará cálculos para predeterminar onde a bola irá caminhar.
 * AI Genético versus AI Genético:
 * * Verificar o que acontece se treinar dois AIs Genéticos.
-
-
-### Fitness ###
-* Se o jogador marcou algo
-* Quanto tempo a bola ficou em jogo
-* Se o jogador errou, por quanto ele errou

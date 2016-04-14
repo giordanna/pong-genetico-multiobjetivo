@@ -11,7 +11,7 @@ public class Raquete {
 
     private int score;
 
-    public Raquete(Pong pong, int numero_raquete) {
+    public Raquete(int numero_raquete) {
         this.numero_raquete = numero_raquete;
 
         if (numero_raquete == 1) {
@@ -19,10 +19,10 @@ public class Raquete {
         }
 
         if (numero_raquete == 2) {
-            this.x = pong.largura - largura;
+            this.x = Configuracao.LARGURA_TELA - largura;
         }
 
-        this.y = pong.altura / 2 - this.altura / 2;
+        this.y = Configuracao.ALTURA_TELA / 2 - this.altura / 2;
     }
     
     public int getLargura() { return largura; }
@@ -37,8 +37,8 @@ public class Raquete {
     
     public int getScore() { return score; }
     
-    public void atualizaScore(){
-        score++;
+    public void atualizaScore(int pontos){
+        score += pontos;
     }
 
     public void resetScore(){
@@ -60,10 +60,10 @@ public class Raquete {
             } else {
                 y = 0;
             }
-        } else if (y + altura + velocidade < Pong.pong.altura) {
+        } else if (y + altura + velocidade < Configuracao.ALTURA_TELA) {
             y += velocidade;
         } else {
-            y = Pong.pong.altura - altura;
+            y = Configuracao.ALTURA_TELA - altura;
         }
     }
     
@@ -97,10 +97,10 @@ public class Raquete {
             } else {
                 y = 0;
             }
-        } else if (y + altura + velocidade < Pong.pong.altura) {
+        } else if (y + altura + velocidade < Configuracao.ALTURA_TELA) {
             y += velocidade;
         } else {
-            y = Pong.pong.altura - altura;
+            y = Configuracao.ALTURA_TELA - altura;
         }
     }
 

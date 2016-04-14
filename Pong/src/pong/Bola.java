@@ -9,6 +9,8 @@ public class Bola {
     private int x, y, largura = Configuracao.BOLA_RAIO, altura = largura;
     
     private boolean especial = false;
+    
+    private int pontuacao_especial = Configuracao.PTS_BOLA_ESPECIAL;
 
     private int movimentoX, movimentoY;
 
@@ -35,6 +37,11 @@ public class Bola {
     public int getMovimentoX() { return movimentoX; }
     
     public int getMovimentoY() { return movimentoY; }
+    
+    public int getPontos(){
+        if (especial) return pontuacao_especial;
+        else return 1;
+    }
     
     public void setEspecial(){
         especial = true;
@@ -86,11 +93,11 @@ public class Bola {
         }
 
         if (verificaColisao(raquete1) == 2) {
-            raquete2.atualizaScore();
+            raquete2.atualizaScore(getPontos());
             criar();
             return -1; // jogador 2 marcou ponto
         } else if (verificaColisao(raquete2) == 2) {
-            raquete1.atualizaScore();
+            raquete1.atualizaScore(getPontos());
             criar();
             return 1; // jogador 1 marcou ponto
         }
@@ -131,6 +138,7 @@ public class Bola {
         // quanto mais longe do centro da raquete, maior a velocidade Y
         int velocidade = this.y - raquete.getY() - raquete.getAltura() / 2;
         velocidade = converterRange(-75,75,-Configuracao.RAQUETE_INCLINACAO,Configuracao.RAQUETE_INCLINACAO,velocidade);
+        movimentoY += -1 + Configuracao.R.nextInt(3); // um pouco mais de aleatoriedade
         if (velocidade == 0) {
                 velocidade = Configuracao.R.nextInt(2);
                 if (velocidade == 0) velocidade = -1;
@@ -143,6 +151,8 @@ public class Bola {
             if (velocidade > 0) movimentoY = velocidade;
             else movimentoY = -velocidade;
         }
+        
+        
     }
 
     public void renderizarBola(Graphics g) {
