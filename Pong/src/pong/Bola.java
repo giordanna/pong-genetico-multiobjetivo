@@ -47,6 +47,7 @@ public class Bola {
         especial = true;
     }
 
+    // aqui que eu tenho que mudar para verificar
     public int atualizarBola(Raquete raquete1, Raquete raquete2) {
         int velocidade = Configuracao.MAX_VELOCIDADE_BOLA;
 
@@ -95,16 +96,15 @@ public class Bola {
         if (verificaColisao(raquete1) == 2) {
             raquete2.atualizaScore(getPontos());
             criar();
-            return -1; // jogador 2 marcou ponto
+            return -getPontos(); // jogador 2 marcou ponto
         } else if (verificaColisao(raquete2) == 2) {
             raquete1.atualizaScore(getPontos());
             criar();
-            return 1; // jogador 1 marcou ponto
+            return getPontos(); // jogador 1 marcou ponto
         }
-        
         return 0;
     }
-
+    
     public void criar() {
         this.quantidade_colisoes = 0;
         this.x = pong.largura / 2 - this.largura / 2;
@@ -124,10 +124,26 @@ public class Bola {
     }
 
     public int verificaColisao(Raquete raquete) {
-        if (this.x < raquete.getX() + raquete.getLargura() && this.x + largura > raquete.getX() && this.y < raquete.getY() + raquete.getAltura() && this.y + altura > raquete.getY()) {
-            return 1; //rebate
-        } else if ((raquete.getX() > x && raquete.getNumeroRaquete() == 1) || (raquete.getX() < x - largura && raquete.getNumeroRaquete() == 2)) {
-            return 2; //ponto
+
+        if (raquete.getNumeroRaquete() == 1){
+            if (x <= raquete.getX() + raquete.getLargura() &&
+                    y + altura <= raquete.getY() + raquete.getAltura() &&
+                    y >= raquete.getY()) {
+                return 1; //rebate
+            } else if ((raquete.getX() >= x + largura && raquete.getNumeroRaquete() == 1) ||
+                    (raquete.getX() + raquete.getLargura() <= x - largura && raquete.getNumeroRaquete() == 2)) {
+                return 2; //ponto
+            }
+        }
+        else{
+            if (x + largura >= raquete.getX() &&
+                    y + altura <= raquete.getY() + raquete.getAltura() &&
+                    y >= raquete.getY()) {
+                return 1; //rebate
+            } else if ((raquete.getX() >= x + largura && raquete.getNumeroRaquete() == 1) ||
+                    (raquete.getX() + raquete.getLargura() <= x - largura && raquete.getNumeroRaquete() == 2)) {
+                return 2; //ponto
+            }
         }
 
         return 0; //nada
@@ -138,11 +154,11 @@ public class Bola {
         // quanto mais longe do centro da raquete, maior a velocidade Y
         int velocidade = this.y - raquete.getY() - raquete.getAltura() / 2;
         velocidade = converterRange(-75,75,-Configuracao.RAQUETE_INCLINACAO,Configuracao.RAQUETE_INCLINACAO,velocidade);
-        movimentoY += -1 + Configuracao.R.nextInt(3); // um pouco mais de aleatoriedade
+
         if (velocidade == 0) {
-                velocidade = Configuracao.R.nextInt(2);
-                if (velocidade == 0) velocidade = -1;
-            }
+            if (Configuracao.R.nextBoolean()) velocidade = 1;
+            else velocidade = -1;
+        }
         if (movimentoY < 0 ){
             if (velocidade < 0) movimentoY = velocidade;
             else movimentoY = -velocidade;
@@ -152,7 +168,10 @@ public class Bola {
             else movimentoY = -velocidade;
         }
         
-        
+        if (quantidade_colisoes > 20){
+            movimentoY *= 2;
+        }
+   
     }
 
     public void renderizarBola(Graphics g) {

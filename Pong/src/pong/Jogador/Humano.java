@@ -14,17 +14,18 @@ public class Humano implements IJogador {
         raquete = new Raquete(numero);
     }
     
+    @Override
     public Raquete getRaquete() { return raquete; }
 
     // não será usado de fato
     @Override
     public int verificaDirecao(Raquete minha, Raquete oponente, Bola bola) {
-        return Configuracao.MAX_VELOCIDADE_RAQUETE;
+        return Configuracao.VELOCIDADE_RAQUETE_PADRAO;
     }
     
     @Override
     public int verificaDirecao(Raquete minha, Raquete oponente, Bola[] bolas){
-        return Configuracao.MAX_VELOCIDADE_RAQUETE;
+        return Configuracao.VELOCIDADE_RAQUETE_PADRAO;
     }
 
     @Override

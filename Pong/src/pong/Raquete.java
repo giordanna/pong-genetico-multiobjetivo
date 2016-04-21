@@ -6,7 +6,8 @@ import pong.Outros.Configuracao;
 
 public class Raquete {
 
-    private final int numero_raquete, largura = Configuracao.RAQUETE_LARGURA, altura = Configuracao.RAQUETE_ALTURA;
+    private final int numero_raquete, largura = Configuracao.RAQUETE_LARGURA;
+    private int altura = Configuracao.RAQUETE_ALTURA;
     private int x, y;
 
     private int score;
@@ -37,6 +38,10 @@ public class Raquete {
     
     public int getScore() { return score; }
     
+    public void setAltura(int altura){
+        this.altura = altura;
+    }
+    
     public void atualizaScore(int pontos){
         score += pontos;
     }
@@ -52,7 +57,16 @@ public class Raquete {
 
     // implementação antiga, mais voltada pro jogador humano
     public void mover(boolean cima) {
-        int velocidade = Configuracao.MAX_VELOCIDADE_RAQUETE;
+        int velocidade = Configuracao.VELOCIDADE_RAQUETE_PADRAO;
+        
+        int diferenca = altura - Configuracao.RAQUETE_ALTURA;
+        
+        if (Math.abs(diferenca) >= Math.abs(velocidade)) diferenca /= 2;
+        
+        velocidade -= diferenca;
+
+        this.y = determinaLimite(y, 0, Configuracao.ALTURA_TELA - this.altura);
+        velocidade = determinaLimite(velocidade, Configuracao.MIN_VELOCIDADE_RAQUETE, altura);
 
         if (cima) {
             if (y - velocidade > 0) {
@@ -87,9 +101,23 @@ public class Raquete {
     
     // TESTAR
     public void mover(int velocidade) {
+        
         this.y = determinaLimite(y, 0, Configuracao.ALTURA_TELA - this.altura);
-        velocidade = determinaLimite(velocidade, -Configuracao.MAX_VELOCIDADE_RAQUETE, Configuracao.MAX_VELOCIDADE_RAQUETE);
+        
+        if (velocidade != 0){
+            int diferenca = altura - Configuracao.RAQUETE_ALTURA;
 
+            if (Math.abs(diferenca) >= Math.abs(velocidade)) diferenca /= 2;
+
+            if (velocidade > 0){
+                velocidade -= diferenca;
+                velocidade = determinaLimite(velocidade, Configuracao.MIN_VELOCIDADE_RAQUETE, altura);
+            }
+            else if (velocidade < 0){
+                velocidade += diferenca;
+                velocidade = determinaLimite(velocidade, -altura, -Configuracao.MIN_VELOCIDADE_RAQUETE);
+            }
+        }
 
         if (velocidade < 0) {
             if (y + velocidade > 0) {

@@ -15,8 +15,10 @@ public class AIGenetico implements IJogador {
     public AIGenetico(Genotipo genotipo, int numero){
         this.genotipo = genotipo;
         raquete = new Raquete(numero);
+        raquete.setAltura(genotipo.getTamanhoRaquete());
     }
     
+    @Override
     public Raquete getRaquete() { return raquete; }
     
     public AIGenetico( Genotipo genotipo ){

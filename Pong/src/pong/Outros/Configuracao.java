@@ -17,9 +17,12 @@ public class Configuracao {
     // todo fazer input
     public static MersenneTwisterFast R = new MersenneTwisterFast();
     
-    public static int QUANTIDADE_BOLAS = 6;
+    public static int QUANTIDADE_BOLAS = 5;
     
-    public static int PTS_BOLA_ESPECIAL = QUANTIDADE_BOLAS/2;
+    public static int PTS_BOLA_ESPECIAL = 3;
+    
+        
+    public static int MAX_PONTUACAO = (PTS_BOLA_ESPECIAL + QUANTIDADE_BOLAS - 1) * 3;
     
     public static int LARGURA_TELA = 800;
     public static int ALTURA_TELA = 600;
@@ -28,10 +31,11 @@ public class Configuracao {
     public static int RAQUETE_ALTURA = 150;
     public static int BOLA_RAIO = 20;
     
-    public static int MAX_ALTURA_RAQUETE = RAQUETE_ALTURA / 3;
+    public static int MAX_ALTURA_RAQUETE = LARGURA_TELA / 3;
     public static int MIN_ALTURA_RAQUETE = 50;
 
-    public static int MAX_VELOCIDADE_RAQUETE = 15;
+    public static int VELOCIDADE_RAQUETE_PADRAO = 15;
+    public static int MIN_VELOCIDADE_RAQUETE = 7;
     public static int MAX_VELOCIDADE_BOLA   = 5;
 
     public static int RAQUETE_INCLINACAO = 3;
@@ -71,7 +75,7 @@ public class Configuracao {
             RAQUETE_LARGURA = config.get(2).intValue();
             RAQUETE_ALTURA = config.get(3).intValue();
             BOLA_RAIO = config.get(4).intValue();
-            MAX_VELOCIDADE_RAQUETE = config.get(5).intValue();
+            VELOCIDADE_RAQUETE_PADRAO = config.get(5).intValue();
             MAX_VELOCIDADE_BOLA = config.get(6).intValue();
             RAQUETE_INCLINACAO = config.get(7).intValue();
             TAMANHO_CROMOSSOMO = config.get(8).intValue();

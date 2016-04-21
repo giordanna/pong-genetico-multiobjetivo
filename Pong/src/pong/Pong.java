@@ -110,10 +110,11 @@ public class Pong implements ActionListener, KeyListener {
         status_jogo = Jogando;
         
         //bola = new Bola(pong);
-        bolas = new Bola [5];
-        for (int i = 0 ; i < 5 ; i++)
+        bolas = new Bola [Configuracao.QUANTIDADE_BOLAS];
+        for (int i = 0 ; i < Configuracao.QUANTIDADE_BOLAS ; i++)
             bolas[i] = new Bola(pong);
         bolas[0].setEspecial();
+
     }
     
     // escreve o texto centralizado
@@ -207,11 +208,11 @@ public class Pong implements ActionListener, KeyListener {
             escreveTexto(g, "Velocidade:" + getVelocidade(), 0, altura - 40);
             
             // aqui que acontece a mágica das raquetes e da bola
+            for (int i = 0 ; i < Configuracao.QUANTIDADE_BOLAS ; i++)
+                bolas[i].renderizarBola(g);
+            
             jogador_esquerda.getRaquete().renderizarRaquete(g);
             jogador_direita.getRaquete().renderizarRaquete(g);
-            
-            for (int i = 0 ; i < 5 ; i++)
-                bolas[i].renderizarBola(g);
         }
     }
 
@@ -341,9 +342,9 @@ public class Pong implements ActionListener, KeyListener {
         for (Bola x: bolas){
             ponto = x.atualizarBola(jogador_esquerda.getRaquete(), jogador_direita.getRaquete());
             if (ponto > 0)
-                pontos_esquerda++;
+                pontos_esquerda += ponto;
             else if (ponto < 0)
-                pontos_direita++;
+                pontos_direita += -ponto;
         }
         
         if (pontos_esquerda != 0 || pontos_direita != 0){
@@ -354,7 +355,7 @@ public class Pong implements ActionListener, KeyListener {
             partida += pontos_esquerda + pontos_direita;
             
             if (jogador_esquerda instanceof Treinador || jogador_direita instanceof Treinador){
-                if (partida == 3 * Configuracao.QUANTIDADE_BOLAS){
+                if (partida >= Configuracao.MAX_PONTUACAO){
                     jogador_esquerda.getRaquete().resetScore();
                     jogador_direita.getRaquete().resetScore();
                     partida = 0;

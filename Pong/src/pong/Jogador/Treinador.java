@@ -47,15 +47,18 @@ public class Treinador implements IJogador {
             diretorio.mkdir();
         }
 
-        output_fitness = new BufferedWriter(new FileWriter("./arquivos/fitness" + treinador + ".csv"));
+        output_fitness = new BufferedWriter(new FileWriter("./arquivos/fitness" 
+                + treinador + ".csv"));
         output_fitness.write("");
         output_fitness.close();
         
-        output_genotipo = new BufferedWriter(new FileWriter("./arquivos/melhorgenotipo" + treinador + ".csv"));
+        output_genotipo = new BufferedWriter(new FileWriter("./arquivos/melhorgenotipo" 
+                + treinador + ".csv"));
         output_genotipo.write("");
         output_genotipo.close();
         
-        output_placar = new BufferedWriter(new FileWriter("./arquivos/placar" + treinador + ".csv"));
+        output_placar = new BufferedWriter(new FileWriter("./arquivos/placar" +
+                treinador + ".csv"));
         output_placar.write("");
         output_placar.close();
         
@@ -67,6 +70,7 @@ public class Treinador implements IJogador {
         raquete = new Raquete(numero);
     }
     
+    @Override
     public Raquete getRaquete() { return raquete; }
     
     public void inicializaPopulacao(){
@@ -139,7 +143,7 @@ public class Treinador implements IJogador {
         }
         
         fitness += contraatacou;
-        fitness += 480 - 3 * ultima_distancia;
+        fitness += Configuracao.ALTURA_TELA - 3 * ultima_distancia;
         bola_passou = false;
         
         if (populacao[atual].getFitness() != 0){
@@ -153,7 +157,7 @@ public class Treinador implements IJogador {
         
         contraatacou = 0;
         
-        if (total == 3 * Configuracao.QUANTIDADE_BOLAS){
+        if (total >= Configuracao.MAX_PONTUACAO){
             
             try {
                 salvaPopulacao();
@@ -194,7 +198,7 @@ public class Treinador implements IJogador {
         
         contraatacou = 0;
         
-        if (total == 3 * Configuracao.QUANTIDADE_BOLAS){
+        if (total >= Configuracao.MAX_PONTUACAO){
             
             try {
                 salvaPopulacao();
@@ -239,15 +243,18 @@ public class Treinador implements IJogador {
     
     public void salvaPopulacao() throws IOException{
         // salva num(s) arquivo(s)
-        output_fitness = new BufferedWriter(new FileWriter("./arquivos/fitness" + treinador + ".csv", true));
+        output_fitness = new BufferedWriter(new FileWriter("./arquivos/fitness"
+                + treinador + ".csv", true));
         output_fitness.append( (populacao[atual].getFitness() + "; ").replace(".",",") );   
         
-        output_placar = new BufferedWriter(new FileWriter("./arquivos/placar" + treinador + ".csv", true));
+        output_placar = new BufferedWriter(new FileWriter("./arquivos/placar" +
+                treinador + ".csv", true));
         output_placar.append(" " + placar() + "; ");
         atual++;
         
-        if (atual >= Configuracao.MAX_POPULACAO){
-            output_genotipo = new BufferedWriter(new FileWriter("./arquivos/melhorgenotipo" + treinador + ".csv", true));
+        if (atual == Configuracao.MAX_POPULACAO){
+            output_genotipo = new BufferedWriter(new FileWriter("./arquivos/melhorgenotipo"
+                    + treinador + ".csv", true));
             
             // mais bonito que a forma anterior
             for (double x: melhorGenotipo().getGenes()){
