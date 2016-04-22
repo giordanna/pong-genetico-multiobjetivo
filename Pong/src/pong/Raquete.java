@@ -57,18 +57,12 @@ public class Raquete {
 
     // implementação antiga, mais voltada pro jogador humano
     public void mover(boolean cima) {
+        
         int velocidade = Configuracao.VELOCIDADE_RAQUETE_PADRAO;
         
-        int diferenca = altura - Configuracao.RAQUETE_ALTURA;
-        
-        if (Math.abs(diferenca) >= Math.abs(velocidade)) diferenca /= 2;
-        
-        velocidade -= diferenca;
+        velocidade = converterAlturaVelocidade(velocidade);
 
-        this.y = determinaLimite(y, 0, Configuracao.ALTURA_TELA - this.altura);
-        velocidade = determinaLimite(velocidade, Configuracao.MIN_VELOCIDADE_RAQUETE, altura);
-
-        if (cima) {
+        if (cima){
             if (y - velocidade > 0) {
                 y -= velocidade;
             } else {
@@ -103,22 +97,10 @@ public class Raquete {
     public void mover(int velocidade) {
         
         this.y = determinaLimite(y, 0, Configuracao.ALTURA_TELA - this.altura);
+        velocidade = determinaLimite(velocidade, -Configuracao.VELOCIDADE_RAQUETE_PADRAO, Configuracao.VELOCIDADE_RAQUETE_PADRAO);
+
+        velocidade = converterAlturaVelocidade(velocidade);
         
-        if (velocidade != 0){
-            int diferenca = altura - Configuracao.RAQUETE_ALTURA;
-
-            if (Math.abs(diferenca) >= Math.abs(velocidade)) diferenca /= 2;
-
-            if (velocidade > 0){
-                velocidade -= diferenca;
-                velocidade = determinaLimite(velocidade, Configuracao.MIN_VELOCIDADE_RAQUETE, altura);
-            }
-            else if (velocidade < 0){
-                velocidade += diferenca;
-                velocidade = determinaLimite(velocidade, -altura, -Configuracao.MIN_VELOCIDADE_RAQUETE);
-            }
-        }
-
         if (velocidade < 0) {
             if (y + velocidade > 0) {
                 y += velocidade;
@@ -130,6 +112,11 @@ public class Raquete {
         } else {
             y = Configuracao.ALTURA_TELA - altura;
         }
+    }
+    
+    public int converterAlturaVelocidade( int velocidade ) {
+        double valor = Configuracao.RAQUETE_ALTURA;
+        return (int) (velocidade * (valor/altura) );
     }
 
 }

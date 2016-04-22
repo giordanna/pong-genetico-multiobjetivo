@@ -12,6 +12,7 @@ public class Humano implements IJogador {
     
     public Humano(int numero){
         raquete = new Raquete(numero);
+        raquete.setAltura(Configuracao.RAQUETE_ALTURA);
     }
     
     @Override

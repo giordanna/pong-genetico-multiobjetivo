@@ -32,10 +32,12 @@ public class Configuracao {
     public static int BOLA_RAIO = 20;
     
     public static int MAX_ALTURA_RAQUETE = LARGURA_TELA / 3;
-    public static int MIN_ALTURA_RAQUETE = 50;
+    public static int MIN_ALTURA_RAQUETE = 70;
 
     public static int VELOCIDADE_RAQUETE_PADRAO = 15;
-    public static int MIN_VELOCIDADE_RAQUETE = 7;
+    public static int MAX_VELOCIDADE_RAQUETE = 32;
+    public static int MIN_VELOCIDADE_RAQUETE = 8;
+    
     public static int MAX_VELOCIDADE_BOLA   = 5;
 
     public static int RAQUETE_INCLINACAO = 3;

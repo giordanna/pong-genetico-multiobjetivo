@@ -9,18 +9,21 @@ public class Genotipo implements Comparable<Genotipo>{
     
     private double gene[];
     private double fitness = 0;
+    private double especial = 0;
     private int tamanho_raquete = Configuracao.RAQUETE_ALTURA;
     
     public Genotipo(){
         gene = new double[Configuracao.TAMANHO_CROMOSSOMO];
+        especial = 0;
         fitness = 0;
         tamanho_raquete = Configuracao.RAQUETE_ALTURA;
+        
     }
     
     public Genotipo( double [] genes ){
         
         gene = new double[genes.length];
-        System.arraycopy(genes, 0, gene, 0, genes.length);  
+        System.arraycopy(genes, 0, gene, 0, genes.length);
         fitness = 0;
         tamanho_raquete = Configuracao.RAQUETE_ALTURA;
     }

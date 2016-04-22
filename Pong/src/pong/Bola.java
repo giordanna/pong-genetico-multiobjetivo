@@ -185,14 +185,10 @@ public class Bola {
         }
     }
     
-    
-
     public static int converterRange( int inicio_original, int final_original,
             int inicio_novo, int final_novo,int valor) {
         double escala = (double)(final_novo - inicio_novo) / (final_original - inicio_original);
         return (int)(inicio_novo + ((valor - inicio_original) * escala));
     }
-
-
 
 }
