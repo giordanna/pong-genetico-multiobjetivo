@@ -234,7 +234,7 @@ public class Pong implements ActionListener, KeyListener {
         
         if (opcao_jogador_direita == 5){ // carregar Genótipo do arquivo
             if (instancias_direita[opcao_jogador_direita] == null){
-                double genotipo [] = new double [3];
+                double genotipo [] = new double [Configuracao.TAMANHO_CROMOSSOMO];
                 
                 File f = new File("./arquivos/melhordireita.txt");
                 if(f.exists() && !f.isDirectory()) {
@@ -257,7 +257,7 @@ public class Pong implements ActionListener, KeyListener {
         
         if (opcao_jogador_esquerda == 5){ // carregar Genótipo do arquivo
             if (instancias_esquerda[opcao_jogador_esquerda] == null){
-                double genotipo [] = new double [3];
+                double genotipo [] = new double [Configuracao.TAMANHO_CROMOSSOMO];
                 
                 File f = new File("./arquivos/melhoresquerda.txt");
                 if(f.exists() && !f.isDirectory()) {
@@ -362,6 +362,19 @@ public class Pong implements ActionListener, KeyListener {
                 }
             }
         }
+        
+        if (jogador_esquerda instanceof Treinador)
+            if (((Treinador) jogador_esquerda).getGeracao() > Configuracao.MAX_GERACOES){
+                status_jogo = Menu;
+                velocidade = 3;
+                mudarVelocidade();
+            }
+        if (jogador_direita instanceof Treinador)
+            if (((Treinador) jogador_direita).getGeracao() > Configuracao.MAX_GERACOES){
+                status_jogo = Menu;
+                velocidade = 3;
+                mudarVelocidade();
+            }
     }
 
     // onde realiza o update dos frames

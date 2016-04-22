@@ -9,14 +9,11 @@ public class Genotipo implements Comparable<Genotipo>{
     
     private double gene[];
     private double fitness = 0;
-    private double especial = 0;
-    private int tamanho_raquete = Configuracao.RAQUETE_ALTURA;
     
     public Genotipo(){
         gene = new double[Configuracao.TAMANHO_CROMOSSOMO];
-        especial = 0;
         fitness = 0;
-        tamanho_raquete = Configuracao.RAQUETE_ALTURA;
+        gene[4] = Configuracao.RAQUETE_ALTURA;
         
     }
     
@@ -25,7 +22,11 @@ public class Genotipo implements Comparable<Genotipo>{
         gene = new double[genes.length];
         System.arraycopy(genes, 0, gene, 0, genes.length);
         fitness = 0;
-        tamanho_raquete = Configuracao.RAQUETE_ALTURA;
+        
+        if (gene[4] > Configuracao.MAX_ALTURA_RAQUETE )
+            gene[4] = Configuracao.MAX_ALTURA_RAQUETE;
+        else if (gene[4] < Configuracao.MIN_ALTURA_RAQUETE )
+            gene[4] = Configuracao.MIN_ALTURA_RAQUETE;
     }
     
     public Genotipo( Genotipo copia ){
@@ -33,7 +34,6 @@ public class Genotipo implements Comparable<Genotipo>{
         gene = new double[copia.gene.length];
         System.arraycopy(copia.gene, 0, gene, 0, copia.gene.length);
         this.fitness = copia.fitness;
-        this.tamanho_raquete = copia.tamanho_raquete;
     }
     
     public double getFitness() { return fitness; }
@@ -42,11 +42,9 @@ public class Genotipo implements Comparable<Genotipo>{
         this.fitness = fitness;
     }
     
-    public int getTamanhoRaquete() { return tamanho_raquete; }
-    
-    public void setTamanhoRaquete(int tamanho_raquete){
-        this.tamanho_raquete = tamanho_raquete;
-    }
+    public int getTamanhoRaquete() { return (int) gene[4]; }
+
+    public double getProbabilidadeEspecial() { return gene[3]; }
     
     public double [] getGenes() { return gene; }
     
@@ -61,11 +59,15 @@ public class Genotipo implements Comparable<Genotipo>{
     // retorna um genótipo aleatório
     public static Genotipo genotipoAleatorio(double menor, double maior){
         Genotipo novo = new Genotipo();
-        for (int i = 0 ; i < Configuracao.TAMANHO_CROMOSSOMO ; i++){
+        for (int i = 0 ; i < 3 ; i++){
             novo.gene[i] = menor + (maior - menor) * Configuracao.R.nextDouble(true,true);
         }
         
-        novo.tamanho_raquete = tamanhoAleatorio(
+        // se dá prioridade pra bola especial
+        novo.gene[3] = Configuracao.R.nextDouble(true,true);
+        
+        // tamanho da raquete
+        novo.gene[4] = tamanhoAleatorio(
                 Configuracao.MIN_ALTURA_RAQUETE,
                 Configuracao.MAX_ALTURA_RAQUETE
         );
@@ -84,8 +86,6 @@ public class Genotipo implements Comparable<Genotipo>{
             novo.gene[i] = (a.gene[i] + b.gene[i]) / 2.0;
         }
         
-        novo.tamanho_raquete = (a.tamanho_raquete + b.tamanho_raquete) / 2;
-        
         return novo;
     }
     
@@ -94,11 +94,14 @@ public class Genotipo implements Comparable<Genotipo>{
         Genotipo g = new Genotipo();
         int maior = Configuracao.MIN_ALTURA_RAQUETE, menor = -maior;
         
-        for (int i = 0 ; i < Configuracao.TAMANHO_CROMOSSOMO ; i++){
+        for (int i = 0 ; i < 4 ; i++){
                 g.gene[i] = a.gene[i] + ( -0.1 + 0.2 * Configuracao.R.nextDouble());
         }
         
-        g.tamanho_raquete = a.tamanho_raquete + tamanhoAleatorio(menor, maior);
+        if (g.gene[3] > 1) g.gene[3] = 1;
+        else if (g.gene[3] < 0) g.gene[3] = 0;
+        
+        g.gene[4] = a.gene[4] + tamanhoAleatorio(menor, maior);
         
         return g;
     }

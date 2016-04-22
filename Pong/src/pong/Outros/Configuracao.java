@@ -14,15 +14,7 @@ import java.util.logging.Logger;
 
 public class Configuracao {
     
-    // todo fazer input
     public static MersenneTwisterFast R = new MersenneTwisterFast();
-    
-    public static int QUANTIDADE_BOLAS = 5;
-    
-    public static int PTS_BOLA_ESPECIAL = 3;
-    
-        
-    public static int MAX_PONTUACAO = (PTS_BOLA_ESPECIAL + QUANTIDADE_BOLAS - 1) * 3;
     
     public static int LARGURA_TELA = 800;
     public static int ALTURA_TELA = 600;
@@ -32,26 +24,29 @@ public class Configuracao {
     public static int BOLA_RAIO = 20;
     
     public static int MAX_ALTURA_RAQUETE = LARGURA_TELA / 3;
-    public static int MIN_ALTURA_RAQUETE = 70;
+    public static int MIN_ALTURA_RAQUETE = RAQUETE_ALTURA / 2;
+    
+    public static int QUANTIDADE_BOLAS = 5;   
+    public static int PTS_BOLA_ESPECIAL = (QUANTIDADE_BOLAS/2 + 1) * 2;
+    public static int MAX_PONTUACAO = (PTS_BOLA_ESPECIAL + QUANTIDADE_BOLAS - 1) * 3;
 
     public static int VELOCIDADE_RAQUETE_PADRAO = 15;
-    public static int MAX_VELOCIDADE_RAQUETE = 32;
-    public static int MIN_VELOCIDADE_RAQUETE = 8;
-    
-    public static int MAX_VELOCIDADE_BOLA   = 5;
+    private static double valor = VELOCIDADE_RAQUETE_PADRAO;
+    public static int MAX_VELOCIDADE_RAQUETE = (int) valor * RAQUETE_ALTURA/MIN_ALTURA_RAQUETE;
+    public static int MIN_VELOCIDADE_RAQUETE = (int) valor * RAQUETE_ALTURA/MAX_ALTURA_RAQUETE;
+    public static int VELOCIDADE_BOLA = 5;
 
     public static int RAQUETE_INCLINACAO = 3;
     
-    public static int TAMANHO_CROMOSSOMO = 3;
+    public static int TAMANHO_CROMOSSOMO = 5;
     public static int MAX_POPULACAO = 30;
-    
     public static double INTERVALO_GENES = 1.5;
-
     public static int RODADA = 3;
-    
-    public static List<Double> config = new ArrayList<>();
+    public static int MAX_GERACOES = 300;
     
     public static Font FONTE_TIPO;
+
+    public static List<Double> config = new ArrayList<>();
     
     public Configuracao() throws FileNotFoundException, IOException{
         
@@ -74,19 +69,29 @@ public class Configuracao {
             
             LARGURA_TELA = config.get(0).intValue();
             ALTURA_TELA = config.get(1).intValue();
+
             RAQUETE_LARGURA = config.get(2).intValue();
             RAQUETE_ALTURA = config.get(3).intValue();
             BOLA_RAIO = config.get(4).intValue();
-            VELOCIDADE_RAQUETE_PADRAO = config.get(5).intValue();
-            MAX_VELOCIDADE_BOLA = config.get(6).intValue();
-            RAQUETE_INCLINACAO = config.get(7).intValue();
+            QUANTIDADE_BOLAS = config.get(5).intValue(); 
+
+            VELOCIDADE_RAQUETE_PADRAO = config.get(6).intValue();
+            VELOCIDADE_BOLA = config.get(7).intValue();
+
             TAMANHO_CROMOSSOMO = config.get(8).intValue();
             MAX_POPULACAO = config.get(9).intValue();
             INTERVALO_GENES = config.get(10);
-            RODADA = config.get(12).intValue();
+            RODADA = config.get(11).intValue();
+            MAX_GERACOES = config.get(12).intValue();
             
-        }
-        
-    }
-    
+            // reconfigura os outros valores que dependem de outros aspectos
+            MAX_ALTURA_RAQUETE = LARGURA_TELA / 3;
+            MIN_ALTURA_RAQUETE = RAQUETE_ALTURA / 2;
+            PTS_BOLA_ESPECIAL = (QUANTIDADE_BOLAS/2 + 1) * 2;
+            MAX_PONTUACAO = (PTS_BOLA_ESPECIAL + QUANTIDADE_BOLAS - 1) * 3;
+            valor = VELOCIDADE_RAQUETE_PADRAO;
+            MAX_VELOCIDADE_RAQUETE = (int) valor * RAQUETE_ALTURA/MIN_ALTURA_RAQUETE;
+            MIN_VELOCIDADE_RAQUETE = (int) valor * RAQUETE_ALTURA/MAX_ALTURA_RAQUETE;  
+        }   
+    }   
 }

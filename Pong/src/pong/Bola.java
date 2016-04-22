@@ -49,7 +49,7 @@ public class Bola {
 
     // aqui que eu tenho que mudar para verificar
     public int atualizarBola(Raquete raquete1, Raquete raquete2) {
-        int velocidade = Configuracao.MAX_VELOCIDADE_BOLA;
+        int velocidade = Configuracao.VELOCIDADE_BOLA;
 
         this.x += movimentoX * velocidade;
         this.y += movimentoY * velocidade;
@@ -77,7 +77,7 @@ public class Bola {
         }
         // colisão com raquete da esquerda
         if (verificaColisao(raquete1) == 1) {
-            this.movimentoX = 1 + (quantidade_colisoes / 5);
+            this.movimentoX = 1 + (quantidade_colisoes / Configuracao.VELOCIDADE_BOLA);
             //this.movimentoY = -2 + R.nextInt(4);
             
             verificaGrau(raquete1);
@@ -85,7 +85,7 @@ public class Bola {
             quantidade_colisoes++;
         // colisão com raquete da direita
         } else if (verificaColisao(raquete2) == 1) {
-            this.movimentoX = -1 - (quantidade_colisoes / 5);
+            this.movimentoX = -1 - (quantidade_colisoes / Configuracao.VELOCIDADE_BOLA);
             //this.movimentoY = -2 + R.nextInt(4);
             
             verificaGrau(raquete2);

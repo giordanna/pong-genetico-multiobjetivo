@@ -3,6 +3,7 @@ package pong.Jogador;
 // utiliza UM genótipo (que é o melhor escolhido da classe treinador)
 
 import pong.Bola;
+import pong.Outros.Configuracao;
 import pong.Raquete;
 
 
@@ -42,6 +43,10 @@ public class AIGenetico implements IJogador {
         int min_indice = 0;
         int min_distancia = Integer.MAX_VALUE, distancia;
         
+        // probabilidade de ir atrás da bola que dá mais pontos
+        if ( Configuracao.R.nextDouble(true,true) < genotipo.getProbabilidadeEspecial())
+            return verificaDirecao(minha,oponente, bolas[0]);
+
         for (int i = 0 ; i < bolas.length ; i++) {
             distancia = minha.distancia(bolas[i]);
             if (distancia < min_distancia){
