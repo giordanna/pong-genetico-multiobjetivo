@@ -309,4 +309,49 @@ public class Treinador implements IJogador {
             populacao[i] = Genotipo.genotipoAleatorio(-intervalo, intervalo);
         }
     }
+    
+    public void repopularPopulacao(boolean nsga){
+        
+        // ordena população
+        Arrays.sort(populacao);
+        
+        Genotipo [] pais_e_filhos = new Genotipo [Configuracao.MAX_POPULACAO * 2];
+        
+        for (int i = 0 ; i < populacao.length ; i++){
+            pais_e_filhos[i] = new Genotipo(populacao[i]);
+        }
+        
+        //torna os piores 3/4 nulos
+        for (int i = populacao.length/4 ; i < populacao.length ; i++){
+            populacao[i] = null;
+        }
+        
+        int j = 0;
+        int outro;
+        // preenche metade com os melhores + um genótipo aleatório da mesma geração
+        for (int i = populacao.length/4 ; i < 3*populacao.length/4 ; i++){
+            while (true){
+                outro = Configuracao.R.nextInt(populacao.length/4);
+                if (j != outro) break;
+            }
+            populacao[i] = new Genotipo(Genotipo.crossover(populacao[j], populacao[outro]));
+            j++;
+        }
+        
+        // adiciona alguns poucos genótipos com mutação
+        for (int i = 3*populacao.length/4 ; i < 7*populacao.length/8 ; i++){
+            outro = Configuracao.R.nextInt(populacao.length/2-1);
+            populacao[i] = new Genotipo(Genotipo.mutacao(populacao[outro]));
+        }
+        
+        // preenche o resto com novos genótipos aleatórios
+        for (int i = 7*populacao.length/8 ; i < populacao.length ; i++){
+            populacao[i] = Genotipo.genotipoAleatorio(-intervalo, intervalo);
+        }
+        
+        for (int i = populacao.length ; i < populacao.length * 2 ; i++){
+            pais_e_filhos[i] = new Genotipo(populacao[i - populacao.length]);
+        }
+        
+    }
 }

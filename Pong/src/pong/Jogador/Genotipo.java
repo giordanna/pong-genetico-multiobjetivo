@@ -1,5 +1,6 @@
 package pong.Jogador;
 
+import java.util.ArrayList;
 import pong.Outros.Configuracao;
 import java.util.Arrays;
 import pong.Bola;
@@ -10,10 +11,19 @@ public class Genotipo implements Comparable<Genotipo>{
     private double gene[];
     private double fitness = 0;
     
+    private ArrayList<Genotipo> dominados; // indivíduos que são dominados por este genotipo
+    private int dominantes = 0; // número de indivíduos que domina este genotipo
+    private double distancia;
+    
+    
     public Genotipo(){
         gene = new double[Configuracao.TAMANHO_CROMOSSOMO];
         fitness = 0;
         gene[4] = Configuracao.RAQUETE_ALTURA;
+        
+        dominados = new ArrayList<>();
+        dominantes = 0;
+        distancia = Integer.MAX_VALUE;
         
     }
     
@@ -27,6 +37,11 @@ public class Genotipo implements Comparable<Genotipo>{
             gene[4] = Configuracao.MAX_ALTURA_RAQUETE;
         else if (gene[4] < Configuracao.MIN_ALTURA_RAQUETE )
             gene[4] = Configuracao.MIN_ALTURA_RAQUETE;
+        
+        dominados = new ArrayList<>();
+        dominantes = 0;
+        
+        distancia = Integer.MAX_VALUE;
     }
     
     public Genotipo( Genotipo copia ){
@@ -34,7 +49,27 @@ public class Genotipo implements Comparable<Genotipo>{
         gene = new double[copia.gene.length];
         System.arraycopy(copia.gene, 0, gene, 0, copia.gene.length);
         this.fitness = copia.fitness;
+        
+        this.dominados = new ArrayList<>(copia.dominados);
+        this.dominantes = copia.dominantes;
+        
+        distancia = copia.distancia;
+
     }
+    
+    public double getDistancia() { return distancia; }
+    
+    public void setDistancia( int distancia ){
+        this.distancia = distancia;
+    }
+    
+    public int getDominantes() { return dominantes; }
+    
+    public void setDominantes (int dominantes) {
+        this.dominantes = dominantes;
+    }
+    
+    public ArrayList<Genotipo> getDominados() { return dominados; }
     
     public double getFitness() { return fitness; }
     
@@ -120,5 +155,27 @@ public class Genotipo implements Comparable<Genotipo>{
         if (this.fitness == outro.fitness)
             return 0;
         return this.fitness < outro.fitness ? 1 : -1;
+    }
+    
+    public boolean dominates( Genotipo outro ){
+        // prob de ir atrás da bola especial maior
+        if (outro.gene[3] > this.gene[3]){
+            // se a raquete dele for maior, ele é mais lento
+            // mais lento = pior
+            return outro.gene[4] < this.gene[4];
+        }
+        else{ // prob de ir atrás de todas as bolas maior
+            // se a raquete dele for menor, ele é mais rápido
+            // porém menor = pior pra pegar todas as bolas
+            return outro.gene[4] > this.gene[4];
+        }
+    }
+    
+    public void calculaDistancia(Genotipo outro){
+        distancia = Math.sqrt(
+                Math.pow(outro.getTamanhoRaquete() - this.getTamanhoRaquete(), 2) +
+                Math.pow(outro.getProbabilidadeEspecial() - this.getProbabilidadeEspecial(), 2)
+        );
+
     }
 }
