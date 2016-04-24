@@ -46,38 +46,41 @@ public class NSGAII {
         
         pais.clear();
 
-        System.out.println("frentes:" + frentes.size());
         int j = 0;
-        while ( (frentes.size() < j ) && (pais.size() + frentes.get(j).getIndividuos().size() <= N)){
-            pais.addAll(frentes.get(j).
-                    getIndividuos());
+        while ( (j < frentes.size()) && (pais.size() + frentes.get(j).getIndividuos().size() <= N)){
+            pais.addAll(frentes.get(j).getIndividuos());
             j++;
         }
 
-        frentes.get(j).sort();
+        if (pais.size() < N){
+            if (j < frentes.size()){
+                frentes.get(j).sort();
 
-        int falta = N - pais.size();
+                int falta = N - pais.size();
 
-        for (i = 0 ; i < falta ; i++){
-            pais.add(frentes.get(j).get(i));
+                for (i = 0 ; i < falta ; i++){
+                    pais.add(frentes.get(j).get(i));
+                }
+            }
         }
 
     }
     
     // RESOLVER PROBLEMA AQUI
     public void fastNonDominatedSort(Genotipo [] genotipos){
-        
         for (Genotipo x: genotipos){
             x.setDominantes(0);
             x.getDominados().clear();
             
             for (Genotipo y: genotipos){
-                if (x.domina(y))
-                    x.getDominados().add(y);
-                else
-                    x.setDominantes(x.getDominantes() + 1);
+                if (!x.equals(y)){
+                    
+                    if (x.domina(y))
+                        x.getDominados().add(y);
+                    if (y.domina(x))
+                        x.setDominantes(x.getDominantes() + 1);
+                }
             }
-            System.out.println("dominantes: " + x.getDominantes());
             if (x.getDominantes() == 0){
                 frentes.get(0).add(x);
             }
@@ -102,7 +105,7 @@ public class NSGAII {
             }
             
             k++;
-            if (frentes.get(k) == null) frentes.add(new Frente());
+            if (frentes.size() - 1 < k ) frentes.add(new Frente());
             frentes.get(k).addAll(lista);
         }
     }

@@ -21,7 +21,6 @@ public class AIBasico implements IJogador {
 
     @Override
     public int verificaDirecao(Raquete minha, Raquete oponente, Bola bola) {
-        if (!verificaPosicao(minha, bola)) return 0;
         return Configuracao.VELOCIDADE_RAQUETE_PADRAO * 
                 ((bola.getY() - minha.getY() - minha.getAltura() / 2) < 0 ? -1 : 1);
     }
@@ -40,11 +39,6 @@ public class AIBasico implements IJogador {
         }
         
         return verificaDirecao(minha,oponente, bolas[min_indice]);
-    }
-    
-    public boolean verificaPosicao(Raquete minha, Bola bola){
-        int valor = Math.abs(bola.getY() - minha.getY() - minha.getAltura() / 2);
-        return (valor > 2);
     }
 
     @Override

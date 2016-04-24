@@ -487,6 +487,8 @@ public class Pong implements ActionListener, KeyListener {
             status_jogo = Menu;
             velocidade = 3;
             mudarVelocidade();
+            jogador_esquerda.getRaquete().resetScore();
+            jogador_direita.getRaquete().resetScore();
         } else if (id == KeyEvent.VK_SPACE) {
             if (status_jogo == Menu){
                 

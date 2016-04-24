@@ -73,6 +73,7 @@ public class Treinador implements IJogador {
     public Treinador(int numero) throws IOException{
         this();
         raquete = new Raquete(numero);
+        raquete.setAltura(populacao[0].getTamanhoRaquete());
     }
     
     @Override
@@ -80,10 +81,9 @@ public class Treinador implements IJogador {
     
     public void inicializaPopulacao(){
         populacao = new Genotipo[Configuracao.MAX_POPULACAO];
-        
         for (int i = 0 ; i < Configuracao.MAX_POPULACAO ; i++){
             populacao[i] = Genotipo.genotipoAleatorio(-intervalo, intervalo);
-        }
+        }  
     }
     
     public int retornaInicio(Raquete minha){
@@ -211,6 +211,8 @@ public class Treinador implements IJogador {
                 Logger.getLogger(Treinador.class.getName()).log(Level.SEVERE, null, ex);
             }
             
+            raquete.setAltura(populacao[atual].getTamanhoRaquete());
+            
             pontos_jogador = 0;
             pontos_adversario = 0;
             total = 0;
@@ -255,7 +257,7 @@ public class Treinador implements IJogador {
         output_placar = new BufferedWriter(new FileWriter("./arquivos/placar" +
                 treinador + ".csv", true));
         output_placar.append(" " + placar() + "; ");
-        atual++;
+        atual++; 
         
         if (atual == Configuracao.MAX_POPULACAO){
             output_genotipo = new BufferedWriter(new FileWriter("./arquivos/melhorgenotipo"
@@ -346,14 +348,9 @@ public class Treinador implements IJogador {
         }
         
         // adiciona alguns poucos genótipos com mutação
-        for (i = 3*populacao.length/4 ; i < 7*populacao.length/8 ; i++){
+        for (i = 3*populacao.length/4 ; i < populacao.length ; i++){
             outro = Configuracao.R.nextInt(populacao.length/2-1);
             populacao[i] = new Genotipo(Genotipo.mutacao(populacao[outro]));
-        }
-        
-        // preenche o resto com novos genótipos aleatórios
-        for (i = 7*populacao.length/8 ; i < populacao.length ; i++){
-            populacao[i] = Genotipo.genotipoAleatorio(-intervalo, intervalo);
         }
         
         // começa: adaptação
@@ -364,8 +361,10 @@ public class Treinador implements IJogador {
         nsga.NSGAII(populacaoNSGA, filhosNSGA, populacao.length, geracao);
         
         for (i = 0 ; i < populacao.length ; i ++){
-            populacao[i] = populacaoNSGA.get(i);
+            populacao[i] = new Genotipo(populacaoNSGA.get(i));
         }
+        
+        Arrays.sort(populacao);
         // termina: adaptação
     }
 }

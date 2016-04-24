@@ -39,8 +39,6 @@ public class AIFisico implements IJogador {
             else
                 bola_y = Configuracao.ALTURA_TELA - (bola_y % Configuracao.ALTURA_TELA);
         }
-        
-        if (noCampo(minha,bola, bola_y)) return 0;
 
         return Configuracao.VELOCIDADE_RAQUETE_PADRAO * 
                 ((bola_y - minha.getY() - minha.getAltura() / 2) < 0 ? -1 : 1);
@@ -60,11 +58,6 @@ public class AIFisico implements IJogador {
         }
         
         return verificaDirecao(minha,oponente, bolas[min_indice]);
-    }
-    
-    public boolean noCampo(Raquete minha, Bola bola, int bola_y){
-        return bola_y > minha.getY() &&
-                (bola_y + bola.getAltura()) < (minha.getY() + minha.getAltura());
     }
 
     @Override

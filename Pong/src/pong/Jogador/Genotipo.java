@@ -159,16 +159,30 @@ public class Genotipo implements Comparable<Genotipo>{
     
     public boolean domina( Genotipo outro ){
         // prob de ir atrás da bola especial maior
-        if (outro.gene[3] >= this.gene[3]){
+        if (this.gene[3] <= outro.gene[3]){
             // se a raquete dele for maior, ele é mais lento
             // mais lento = pior
-            return outro.gene[4] <= this.gene[4];
+            return this.gene[4] <= outro.gene[4];
         }
-        else{ // prob de ir atrás de todas as bolas maior
-            // se a raquete dele for menor, ele é mais rápido
-            // porém menor = pior pra pegar todas as bolas
-            return outro.gene[4] >= this.gene[4];
+        return false;
+    }
+    
+    @Override
+    public boolean equals(Object o){
+        if (o instanceof Genotipo){
+            Genotipo outro = (Genotipo) o;
+            for (int i = 3 ; i < this.gene.length ; i++)
+                if (this.gene[i] != outro.gene[i]) return false;
+            return true;
         }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + Arrays.hashCode(this.gene);
+        return hash;
     }
     
     public void calculaDistancia(Genotipo outro){
