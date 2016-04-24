@@ -157,17 +157,17 @@ public class Genotipo implements Comparable<Genotipo>{
         return this.fitness < outro.fitness ? 1 : -1;
     }
     
-    public boolean dominates( Genotipo outro ){
+    public boolean domina( Genotipo outro ){
         // prob de ir atrás da bola especial maior
-        if (outro.gene[3] > this.gene[3]){
+        if (outro.gene[3] >= this.gene[3]){
             // se a raquete dele for maior, ele é mais lento
             // mais lento = pior
-            return outro.gene[4] < this.gene[4];
+            return outro.gene[4] <= this.gene[4];
         }
         else{ // prob de ir atrás de todas as bolas maior
             // se a raquete dele for menor, ele é mais rápido
             // porém menor = pior pra pegar todas as bolas
-            return outro.gene[4] > this.gene[4];
+            return outro.gene[4] >= this.gene[4];
         }
     }
     

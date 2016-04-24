@@ -1,70 +1,83 @@
 package pong.NSGAII;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import pong.Jogador.Genotipo;
 
 public class NSGAII {
-    ArrayList<Frente> frentes;
+    private ArrayList<Frente> frentes;
+    private Writer output_frentes;
+    private int numero;
     
-    public NSGAII(){
+    public NSGAII(int numero) throws IOException{
         frentes = new ArrayList<>();
+        this.numero = numero;
         
-        frentes.add(new Frente());
+        output_frentes = new BufferedWriter(new FileWriter("./arquivos/frentes" 
+                + numero + ".csv"));
+        output_frentes.write("");
+        output_frentes.close();
     }
     
-    public void NSGAII( ArrayList<Genotipo> pais, ArrayList<Genotipo> filhos, int N){
+    public void NSGAII( ArrayList<Genotipo> pais, ArrayList<Genotipo> filhos, int N, int geracao) throws IOException{
+        
+        // zera as frentes
+        frentes.clear();
+        frentes.add(new Frente());
         
         Genotipo [] reuniao = new Genotipo [N * 2];
-        int geracao = 0;
-        while (true){
             
-            int i = 0;
-            for (Genotipo x: pais){
-                reuniao[i] = new Genotipo(x);
-                i++;
-            }
-            
-            for (Genotipo x: filhos){
-                reuniao[i] = new Genotipo(x);
-                i++;
-            }
-            
-            fastNonDominatedSort(reuniao);
-            pais.clear();
-            
-            
-            int j = 1;
-            while (pais.size() + frentes.get(j).getIndividuos().size() <= N){
-                pais.addAll(frentes.get(j).getIndividuos());
-                j++;
-            }
-            
-            frentes.get(j).sort();
-            
-            int falta = N - pais.size();
-            
-            for (i = 0 ; i < falta ; i++){
-                pais.add(frentes.get(j).get(i));
-            }
-
-            // torneio
-            // seleção, cruzamento e mutação
-            geracao++;
+        int i = 0;
+        for (Genotipo x: pais){
+            reuniao[i] = new Genotipo(x);
+            i++;
         }
+
+        for (Genotipo x: filhos){
+            reuniao[i] = new Genotipo(x);
+            i++;
+        }
+
+        fastNonDominatedSort(reuniao);
+        salvaFrentes(geracao);
+        
+        pais.clear();
+
+        System.out.println("frentes:" + frentes.size());
+        int j = 0;
+        while ( (frentes.size() < j ) && (pais.size() + frentes.get(j).getIndividuos().size() <= N)){
+            pais.addAll(frentes.get(j).
+                    getIndividuos());
+            j++;
+        }
+
+        frentes.get(j).sort();
+
+        int falta = N - pais.size();
+
+        for (i = 0 ; i < falta ; i++){
+            pais.add(frentes.get(j).get(i));
+        }
+
     }
     
+    // RESOLVER PROBLEMA AQUI
     public void fastNonDominatedSort(Genotipo [] genotipos){
+        
         for (Genotipo x: genotipos){
             x.setDominantes(0);
             x.getDominados().clear();
             
             for (Genotipo y: genotipos){
-                if (x.dominates(y))
+                if (x.domina(y))
                     x.getDominados().add(y);
                 else
                     x.setDominantes(x.getDominantes() + 1);
             }
-            
+            System.out.println("dominantes: " + x.getDominantes());
             if (x.getDominantes() == 0){
                 frentes.get(0).add(x);
             }
@@ -73,19 +86,53 @@ public class NSGAII {
         
         int k = 0;
         while (!frentes.get(k).getIndividuos().isEmpty()){
-            ArrayList<Genotipo> Q = new ArrayList<>();
+            
+            ArrayList<Genotipo> lista = new ArrayList<>();
+            
             for (Genotipo x: frentes.get(k).getIndividuos()){
+                
                 for (Genotipo y: x.getDominados()){
+                    
                     y.setDominantes(y.getDominantes() - 1);
                     if (y.getDominantes() == 0){
-                        Q.add(y);
+                        lista.add(y);
                     }
+                    
                 }
             }
+            
             k++;
             if (frentes.get(k) == null) frentes.add(new Frente());
-            frentes.get(k).addAll(Q);
+            frentes.get(k).addAll(lista);
         }
     }
-
+    
+    public void salvaFrentes(int geracao) throws IOException{
+        
+        // salva num(s) arquivo(s)
+        output_frentes = new BufferedWriter(new FileWriter("./arquivos/frentes"
+                + numero + ".csv", true));
+        
+        output_frentes.append("Geracao:" + geracao + "\n");
+        for (int i = 0 ; i < frentes.size() ; i++){
+            
+            output_frentes.append("Frente:" + (i + 1) + "\n");
+            
+            for (int j = 0 ; j < frentes.get(i).getIndividuos().size() ; j++){
+                
+                for (double x: frentes.get(i).get(j).getGenes()){
+                    output_frentes.append(String.valueOf(x).replace(".",","));
+                    output_frentes.append("; ");
+                }
+                output_frentes.append("\n");
+                
+            }
+            
+            output_frentes.append("\n");
+        }
+        
+        output_frentes.append("\n");
+        
+        output_frentes.close();
+    }
 }

@@ -8,10 +8,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import pong.Bola;
+import pong.NSGAII.NSGAII;
 import pong.Outros.Configuracao;
 import pong.Raquete;
 
@@ -30,8 +32,10 @@ public class Treinador implements IJogador {
     private int geracao = 1;
     private Writer output_fitness, output_genotipo, output_placar;
     private Raquete raquete;
+    private NSGAII nsga;
 
     public Treinador() throws IOException{
+
         qtd_treinador++;
         treinador = qtd_treinador;
         
@@ -40,6 +44,7 @@ public class Treinador implements IJogador {
         contraatacou = 0;
         atual = 0;
         
+        nsga = new NSGAII(treinador);
         
         File diretorio = new File("arquivos");
         if (!diretorio.exists()) {
@@ -267,7 +272,7 @@ public class Treinador implements IJogador {
             output_fitness.append("\n");
             output_placar.append("\n");
             
-            repopularPopulacao();
+            repopularPopulacao(false);
             atual = 0;
             geracao++;
         }
@@ -310,26 +315,28 @@ public class Treinador implements IJogador {
         }
     }
     
-    public void repopularPopulacao(boolean nsga){
+    public void repopularPopulacao(boolean n) throws IOException{
+        
+        int i;
         
         // ordena população
         Arrays.sort(populacao);
         
-        Genotipo [] pais_e_filhos = new Genotipo [Configuracao.MAX_POPULACAO * 2];
-        
-        for (int i = 0 ; i < populacao.length ; i++){
-            pais_e_filhos[i] = new Genotipo(populacao[i]);
-        }
+        // começa: adaptação
+        ArrayList<Genotipo> populacaoNSGA = new ArrayList<>();
+        for (Genotipo x: populacao)
+            populacaoNSGA.add(new Genotipo(x));
+        // termina: adaptação
         
         //torna os piores 3/4 nulos
-        for (int i = populacao.length/4 ; i < populacao.length ; i++){
+        for (i = populacao.length/4 ; i < populacao.length ; i++){
             populacao[i] = null;
         }
         
         int j = 0;
         int outro;
         // preenche metade com os melhores + um genótipo aleatório da mesma geração
-        for (int i = populacao.length/4 ; i < 3*populacao.length/4 ; i++){
+        for (i = populacao.length/4 ; i < 3*populacao.length/4 ; i++){
             while (true){
                 outro = Configuracao.R.nextInt(populacao.length/4);
                 if (j != outro) break;
@@ -339,19 +346,26 @@ public class Treinador implements IJogador {
         }
         
         // adiciona alguns poucos genótipos com mutação
-        for (int i = 3*populacao.length/4 ; i < 7*populacao.length/8 ; i++){
+        for (i = 3*populacao.length/4 ; i < 7*populacao.length/8 ; i++){
             outro = Configuracao.R.nextInt(populacao.length/2-1);
             populacao[i] = new Genotipo(Genotipo.mutacao(populacao[outro]));
         }
         
         // preenche o resto com novos genótipos aleatórios
-        for (int i = 7*populacao.length/8 ; i < populacao.length ; i++){
+        for (i = 7*populacao.length/8 ; i < populacao.length ; i++){
             populacao[i] = Genotipo.genotipoAleatorio(-intervalo, intervalo);
         }
         
-        for (int i = populacao.length ; i < populacao.length * 2 ; i++){
-            pais_e_filhos[i] = new Genotipo(populacao[i - populacao.length]);
-        }
+        // começa: adaptação
+        ArrayList<Genotipo> filhosNSGA = new ArrayList<>();
+        for (Genotipo x: populacao)
+            filhosNSGA.add(new Genotipo(x));
         
+        nsga.NSGAII(populacaoNSGA, filhosNSGA, populacao.length, geracao);
+        
+        for (i = 0 ; i < populacao.length ; i ++){
+            populacao[i] = populacaoNSGA.get(i);
+        }
+        // termina: adaptação
     }
 }
