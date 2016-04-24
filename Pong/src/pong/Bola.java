@@ -17,6 +17,8 @@ public class Bola {
     private Pong pong;
 
     private int quantidade_colisoes;
+    
+    private boolean passou = false;
 
     public Bola(Pong pong) {
         this.pong = pong;
@@ -121,6 +123,8 @@ public class Bola {
         } else {
             movimentoX = -1;
         }
+        
+        this.passou = false;
     }
 
     public int verificaColisao(Raquete raquete) {
@@ -129,21 +133,28 @@ public class Bola {
             if (x <= raquete.getX() + raquete.getLargura() &&
                     y + altura <= raquete.getY() + raquete.getAltura() &&
                     y >= raquete.getY()) {
-                return 1; //rebate
-            } else if ((raquete.getX() >= x + largura && raquete.getNumeroRaquete() == 1) ||
-                    (raquete.getX() + raquete.getLargura() <= x - largura && raquete.getNumeroRaquete() == 2)) {
+                if (!passou) return 1; //rebate
+                else return 0; // nada
+            } else if (raquete.getX() >= x + largura) {
                 return 2; //ponto
-            }
+            } else if (raquete.getX() + raquete.getLargura() > x) {
+                this.passou = true;
+                return 0;
+            }  
         }
         else{
             if (x + largura >= raquete.getX() &&
                     y + altura <= raquete.getY() + raquete.getAltura() &&
                     y >= raquete.getY()) {
-                return 1; //rebate
-            } else if ((raquete.getX() >= x + largura && raquete.getNumeroRaquete() == 1) ||
-                    (raquete.getX() + raquete.getLargura() <= x - largura && raquete.getNumeroRaquete() == 2)) {
+                if (!passou) return 1; //rebate
+                else return 0; // nada
+            } else if (raquete.getX() + raquete.getLargura() <= x - largura) {
                 return 2; //ponto
+            } else if (raquete.getX() < x + largura) {
+                this.passou = true;
+                return 0;
             }
+            
         }
 
         return 0; //nada

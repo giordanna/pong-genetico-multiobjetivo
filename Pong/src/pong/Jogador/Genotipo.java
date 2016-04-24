@@ -92,7 +92,6 @@ public class Genotipo implements Comparable<Genotipo>{
     // mutação do genótipo. para tentar escapar da solução subótima local
     public static Genotipo mutacao(Genotipo a){
         Genotipo g = new Genotipo();
-        int maior = Configuracao.MIN_ALTURA_RAQUETE, menor = -maior;
         
         for (int i = 0 ; i < 4 ; i++){
                 g.gene[i] = a.gene[i] + ( -0.1 + 0.2 * Configuracao.R.nextDouble());
@@ -101,7 +100,12 @@ public class Genotipo implements Comparable<Genotipo>{
         if (g.gene[3] > 1) g.gene[3] = 1;
         else if (g.gene[3] < 0) g.gene[3] = 0;
         
-        g.gene[4] = a.gene[4] + tamanhoAleatorio(menor, maior);
+        g.gene[4] = a.gene[4] + tamanhoAleatorio(-10, 10);
+        
+        if (g.gene[4] > Configuracao.MAX_ALTURA_RAQUETE )
+            g.gene[4] = Configuracao.MAX_ALTURA_RAQUETE;
+        else if (g.gene[4] < Configuracao.MIN_ALTURA_RAQUETE )
+            g.gene[4] = Configuracao.MIN_ALTURA_RAQUETE;
         
         return g;
     }

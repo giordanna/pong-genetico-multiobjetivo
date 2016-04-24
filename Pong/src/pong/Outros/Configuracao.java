@@ -23,7 +23,7 @@ public class Configuracao {
     public static int RAQUETE_ALTURA = 150;
     public static int BOLA_RAIO = 20;
     
-    public static int MAX_ALTURA_RAQUETE = LARGURA_TELA / 3;
+    public static int MAX_ALTURA_RAQUETE = 3 * LARGURA_TELA / 10;
     public static int MIN_ALTURA_RAQUETE = RAQUETE_ALTURA / 2;
     
     public static int QUANTIDADE_BOLAS = 5;   
@@ -85,7 +85,7 @@ public class Configuracao {
             MAX_GERACOES = config.get(12).intValue();
             
             // reconfigura os outros valores que dependem de outros aspectos
-            MAX_ALTURA_RAQUETE = LARGURA_TELA / 3;
+            MAX_ALTURA_RAQUETE = 3 * LARGURA_TELA / 10;
             MIN_ALTURA_RAQUETE = RAQUETE_ALTURA / 2;
             PTS_BOLA_ESPECIAL = (QUANTIDADE_BOLAS/2 + 1) * 2;
             MAX_PONTUACAO = (PTS_BOLA_ESPECIAL + QUANTIDADE_BOLAS - 1) * 3;
