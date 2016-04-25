@@ -19,7 +19,7 @@ public class Genotipo implements Comparable<Genotipo>{
     public Genotipo(){
         gene = new double[Configuracao.TAMANHO_CROMOSSOMO];
         fitness = 0;
-        gene[4] = Configuracao.RAQUETE_ALTURA;
+        gene[3] = Configuracao.RAQUETE_ALTURA;
         
         dominados = new ArrayList<>();
         dominantes = 0;
@@ -33,10 +33,10 @@ public class Genotipo implements Comparable<Genotipo>{
         System.arraycopy(genes, 0, gene, 0, genes.length);
         fitness = 0;
         
-        if (gene[4] > Configuracao.MAX_ALTURA_RAQUETE )
-            gene[4] = Configuracao.MAX_ALTURA_RAQUETE;
-        else if (gene[4] < Configuracao.MIN_ALTURA_RAQUETE )
-            gene[4] = Configuracao.MIN_ALTURA_RAQUETE;
+        if (gene[3] > Configuracao.MAX_ALTURA_RAQUETE )
+            gene[3] = Configuracao.MAX_ALTURA_RAQUETE;
+        else if (gene[3] < Configuracao.MIN_ALTURA_RAQUETE )
+            gene[3] = Configuracao.MIN_ALTURA_RAQUETE;
         
         dominados = new ArrayList<>();
         dominantes = 0;
@@ -59,7 +59,7 @@ public class Genotipo implements Comparable<Genotipo>{
     
     public double getDistancia() { return distancia; }
     
-    public void setDistancia( int distancia ){
+    public void setDistancia( double distancia ){
         this.distancia = distancia;
     }
     
@@ -77,9 +77,9 @@ public class Genotipo implements Comparable<Genotipo>{
         this.fitness = fitness;
     }
     
-    public int getTamanhoRaquete() { return (int) gene[4]; }
+    public int getTamanhoRaquete() { return (int) gene[3]; }
 
-    public double getProbabilidadeEspecial() { return gene[3]; }
+    public double getProbabilidadeEspecial() { return gene[4]; }
     
     public double [] getGenes() { return gene; }
     
@@ -99,10 +99,10 @@ public class Genotipo implements Comparable<Genotipo>{
         }
         
         // se dá prioridade pra bola especial
-        novo.gene[3] = Configuracao.R.nextDouble(true,true);
+        novo.gene[4] = Configuracao.R.nextDouble(true,true);
         
         // tamanho da raquete
-        novo.gene[4] = tamanhoAleatorio(
+        novo.gene[3] = tamanhoAleatorio(
                 Configuracao.MIN_ALTURA_RAQUETE,
                 Configuracao.MAX_ALTURA_RAQUETE
         );
@@ -128,19 +128,21 @@ public class Genotipo implements Comparable<Genotipo>{
     public static Genotipo mutacao(Genotipo a){
         Genotipo g = new Genotipo();
         
-        for (int i = 0 ; i < 4 ; i++){
+        for (int i = 0 ; i < 3 ; i++){
                 g.gene[i] = a.gene[i] + ( -0.1 + 0.2 * Configuracao.R.nextDouble());
         }
         
-        if (g.gene[3] > 1) g.gene[3] = 1;
-        else if (g.gene[3] < 0) g.gene[3] = 0;
+        g.gene[4] = a.gene[4] + ( -0.1 + 0.2 * Configuracao.R.nextDouble());
         
-        g.gene[4] = a.gene[4] + tamanhoAleatorio(-10, 10);
+        if (g.gene[4] > 1) g.gene[4] = 1;
+        else if (g.gene[4] < 0) g.gene[4] = 0;
         
-        if (g.gene[4] > Configuracao.MAX_ALTURA_RAQUETE )
-            g.gene[4] = Configuracao.MAX_ALTURA_RAQUETE;
-        else if (g.gene[4] < Configuracao.MIN_ALTURA_RAQUETE )
-            g.gene[4] = Configuracao.MIN_ALTURA_RAQUETE;
+        g.gene[3] = a.gene[3] + tamanhoAleatorio(-10, 10);
+        
+        if (g.gene[3] > Configuracao.MAX_ALTURA_RAQUETE )
+            g.gene[3] = Configuracao.MAX_ALTURA_RAQUETE;
+        else if (g.gene[3] < Configuracao.MIN_ALTURA_RAQUETE )
+            g.gene[3] = Configuracao.MIN_ALTURA_RAQUETE;
         
         return g;
     }
@@ -159,9 +161,9 @@ public class Genotipo implements Comparable<Genotipo>{
     
     public boolean domina( Genotipo outro ){
         // raquete menor
-        if (this.gene[4] <= outro.gene[4]){
+        if (this.gene[3] < outro.gene[3]){
             // prioridade na bola colorida
-            return this.gene[3] <= outro.gene[3];
+            return this.gene[4] < outro.gene[4];
         }
         return false;
     }
@@ -170,7 +172,7 @@ public class Genotipo implements Comparable<Genotipo>{
     public boolean equals(Object o){
         if (o instanceof Genotipo){
             Genotipo outro = (Genotipo) o;
-            for (int i = 3 ; i < this.gene.length ; i++)
+            for (int i = 0 ; i < this.gene.length ; i++)
                 if (this.gene[i] != outro.gene[i]) return false;
             return true;
         }
@@ -182,13 +184,5 @@ public class Genotipo implements Comparable<Genotipo>{
         int hash = 7;
         hash = 89 * hash + Arrays.hashCode(this.gene);
         return hash;
-    }
-    
-    public void calculaDistancia(Genotipo outro){
-        distancia = Math.sqrt(
-                Math.pow(outro.getTamanhoRaquete() - this.getTamanhoRaquete(), 2) +
-                Math.pow(outro.getProbabilidadeEspecial() - this.getProbabilidadeEspecial(), 2)
-        );
-
     }
 }

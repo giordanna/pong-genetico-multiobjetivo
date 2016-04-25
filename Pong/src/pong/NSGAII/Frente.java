@@ -1,6 +1,8 @@
 package pong.NSGAII;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import pong.Jogador.Genotipo;
 
 public class Frente {
@@ -29,43 +31,28 @@ public class Frente {
     }
 
     public void sort(){
+        
+        if (individuos.size() > 1) {
+            
+            individuos.get(0).setDistancia(Double.POSITIVE_INFINITY);
+            individuos.get(individuos.size() - 1).setDistancia(Double.POSITIVE_INFINITY);
+            
+            Collections.sort(individuos, new TamanhoRaqueteComparator());
 
-        Genotipo aux;
-        
-        // ordena por lergura da raquete
-        for (int i = individuos.size() - 1 ; i >= 1 ; i--){
-            for (int j = 0; j < i ; j++){
-                
-                if (individuos.get(j).getTamanhoRaquete() > individuos.get(j+1).getTamanhoRaquete()){
-                    aux = individuos.get(j);
-                    individuos.set(j, individuos.get(j+1));
-                    individuos.set(j+1, aux);
-                }
+            for (int j = 1; j < individuos.size() - 1; j++) {
+                individuos.get(j).setDistancia(individuos.get(j).getDistancia() +
+                        individuos.get(j + 1).getTamanhoRaquete() - individuos.get(j - 1).getTamanhoRaquete());
             }
-        }
-        
-        // mede distancia
-        crowdingDistance();
-        
-        // ordena por distância
-        for (int i = individuos.size() - 1 ; i >= 1 ; i--){
-            for (int j = 0; j < i ; j++){
-                
-                if (individuos.get(j).getDistancia() > individuos.get(j+1).getDistancia()){
-                    aux = individuos.get(j);
-                    individuos.set(j, individuos.get(j+1));
-                    individuos.set(j+1, aux);
-                }
+            
+            Collections.sort(individuos, new ProbabilidadeComparator());
+            
+            for (int j = 1; j < individuos.size() - 1; j++) {
+                individuos.get(j).setDistancia(individuos.get(j).getDistancia() +
+                        individuos.get(j + 1).getProbabilidadeEspecial() - individuos.get(j - 1).getProbabilidadeEspecial());
             }
-        }
-    }
-    
-    public void crowdingDistance(){
-        individuos.get(0).setDistancia(Integer.MAX_VALUE);
-        individuos.get(individuos.size() - 1).setDistancia(Integer.MAX_VALUE);
-        
-        for (int i = 1 ; i < individuos.size() - 1 ; i ++){
-            individuos.get(i).calculaDistancia(individuos.get(i+1));
+
+        } else {
+            individuos.get(0).setDistancia(Double.POSITIVE_INFINITY);
         }
     }
 
