@@ -163,7 +163,7 @@ public class Genotipo implements Comparable<Genotipo>{
         // raquete menor
         if (this.gene[3] < outro.gene[3]){
             // prioridade na bola colorida
-            return this.gene[4] < outro.gene[4];
+            return (this.gene[4] < outro.gene[4]);
         }
         return false;
     }
@@ -172,7 +172,7 @@ public class Genotipo implements Comparable<Genotipo>{
     public boolean equals(Object o){
         if (o instanceof Genotipo){
             Genotipo outro = (Genotipo) o;
-            for (int i = 0 ; i < this.gene.length ; i++)
+            for (int i = 3 ; i < this.gene.length ; i++)
                 if (this.gene[i] != outro.gene[i]) return false;
             return true;
         }

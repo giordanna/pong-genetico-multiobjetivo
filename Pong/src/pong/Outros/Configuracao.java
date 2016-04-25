@@ -42,7 +42,7 @@ public class Configuracao {
     public static int MAX_POPULACAO = 30;
     public static double INTERVALO_GENES = 1.5;
     public static int RODADA = 3;
-    public static int MAX_GERACOES = 300;
+    public static int MAX_GERACOES = 100;
     
     public static Font FONTE_TIPO;
 

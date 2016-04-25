@@ -22,6 +22,7 @@ public class Treinador implements IJogador {
     private static int qtd_treinador = 0;
     private int treinador;
     private Genotipo populacao[];
+    private Genotipo oldpop[];
     private double intervalo;
     private boolean bola_passou;
     private int contraatacou;
@@ -83,9 +84,13 @@ public class Treinador implements IJogador {
     
     public void inicializaPopulacao(){
         populacao = new Genotipo[Configuracao.MAX_POPULACAO];
+        oldpop = new Genotipo[Configuracao.MAX_POPULACAO];
+        
         for (int i = 0 ; i < Configuracao.MAX_POPULACAO ; i++){
             populacao[i] = Genotipo.genotipoAleatorio(-intervalo, intervalo);
-        }  
+        }
+        
+        
     }
     
     public int retornaInicio(Raquete minha){
@@ -138,6 +143,7 @@ public class Treinador implements IJogador {
     // cálculo do fitness
     @Override
     public void resultado(int ponto_meu, int ponto_oponente){
+        
         int fitness = 0;
         
         total += ponto_meu + ponto_oponente;
@@ -233,7 +239,7 @@ public class Treinador implements IJogador {
             output_fitness.append("\n");
             output_placar.append("\n");
             
-            repopularPopulacao();
+            if (geracao < Configuracao.MAX_GERACOES) repopularPopulacao();
             atual = 0;
             geracao++;
         }
@@ -242,18 +248,11 @@ public class Treinador implements IJogador {
         
     }
     
-    public void repopularPopulacao() throws IOException{
-        
+    public void geraFilhos(){
         int i;
         
         // ordena população
         Arrays.sort(populacao);
-        
-        // começa: adaptação
-        ArrayList<Genotipo> populacaoNSGA = new ArrayList<>();
-        for (Genotipo x: populacao)
-            populacaoNSGA.add(new Genotipo(x));
-        // termina: adaptação
         
         //torna os piores 3/4 nulos
         for (i = populacao.length/4 ; i < populacao.length ; i++){
@@ -277,19 +276,49 @@ public class Treinador implements IJogador {
             outro = Configuracao.R.nextInt(populacao.length/2-1);
             populacao[i] = new Genotipo(Genotipo.mutacao(populacao[outro]));
         }
+    }
+    
+    public void repopularPopulacao() throws IOException{
         
-        // começa: adaptação
-        ArrayList<Genotipo> filhosNSGA = new ArrayList<>();
-        for (Genotipo x: populacao)
-            filhosNSGA.add(new Genotipo(x));
+        int i;
         
-        nsga.NSGAII(populacaoNSGA, filhosNSGA, populacao.length, geracao);
+        if (geracao == 1){
+            for (i = 0 ; i < populacao.length ; i++)
+                oldpop[i] = new Genotipo (populacao[i]);
+            
+            ArrayList<Genotipo> populacaoNSGA = new ArrayList<>();
+            for (Genotipo x: populacao)
+                populacaoNSGA.add(new Genotipo(x));
+            
+            nsga.NSGAII(populacaoNSGA, populacaoNSGA, populacao.length, geracao);
         
-        for (i = 0 ; i < populacao.length ; i ++){
-            populacao[i] = new Genotipo(populacaoNSGA.get(i));
+            for (i = 0 ; i < populacao.length ; i ++){
+                populacao[i] = new Genotipo(populacaoNSGA.get(i));
+            }
+
+            geraFilhos();
+            
         }
+        else{
+            ArrayList<Genotipo> populacaoNSGA = new ArrayList<>();
+            for (Genotipo x: oldpop)
+                populacaoNSGA.add(new Genotipo(x));
+            
+            ArrayList<Genotipo> filhosNSGA = new ArrayList<>();
+            for (Genotipo x: populacao)
+                filhosNSGA.add(new Genotipo(x));
+
+            nsga.NSGAII(populacaoNSGA, filhosNSGA, populacao.length, geracao);
         
-        Arrays.sort(populacao);
-        // termina: adaptação
+            // salva oldpop
+            for (i = 0 ; i < populacao.length ; i++)
+                oldpop[i] = new Genotipo(populacao[i]);
+            
+            for (i = 0 ; i < populacao.length ; i ++){
+                populacao[i] = new Genotipo(populacaoNSGA.get(i));
+            }
+
+            geraFilhos();
+        }
     }
 }
