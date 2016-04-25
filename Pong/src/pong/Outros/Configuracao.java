@@ -27,7 +27,7 @@ public class Configuracao {
     public static int MIN_ALTURA_RAQUETE = RAQUETE_ALTURA / 2;
     
     public static int QUANTIDADE_BOLAS = 5;   
-    public static int PTS_BOLA_ESPECIAL = (QUANTIDADE_BOLAS/2 + 1) * 2;
+    public static int PTS_BOLA_ESPECIAL = QUANTIDADE_BOLAS * 2;
     public static int MAX_PONTUACAO = (PTS_BOLA_ESPECIAL + QUANTIDADE_BOLAS - 1) * 3;
 
     public static int VELOCIDADE_RAQUETE_PADRAO = 15;
@@ -87,7 +87,7 @@ public class Configuracao {
             // reconfigura os outros valores que dependem de outros aspectos
             MAX_ALTURA_RAQUETE = 3 * LARGURA_TELA / 10;
             MIN_ALTURA_RAQUETE = RAQUETE_ALTURA / 2;
-            PTS_BOLA_ESPECIAL = (QUANTIDADE_BOLAS/2 + 1) * 2;
+            PTS_BOLA_ESPECIAL = QUANTIDADE_BOLAS * 2;
             MAX_PONTUACAO = (PTS_BOLA_ESPECIAL + QUANTIDADE_BOLAS - 1) * 3;
             valor = VELOCIDADE_RAQUETE_PADRAO;
             MAX_VELOCIDADE_RAQUETE = (int) valor * RAQUETE_ALTURA/MIN_ALTURA_RAQUETE;

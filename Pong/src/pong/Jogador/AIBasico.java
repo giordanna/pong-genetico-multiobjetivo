@@ -42,9 +42,6 @@ public class AIBasico implements IJogador {
     }
 
     @Override
-    public void resultado(int ponto) {}
-
-    @Override
     public void resultado(int ponto_meu, int ponto_oponente) {}
     
 }

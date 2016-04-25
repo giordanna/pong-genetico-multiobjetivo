@@ -44,7 +44,7 @@ public class Treinador implements IJogador {
         contraatacou = 0;
         atual = 0;
         
-        nsga = new NSGAII(treinador);
+        
         
         File diretorio = new File("arquivos");
         if (!diretorio.exists()) {
@@ -52,6 +52,8 @@ public class Treinador implements IJogador {
             diretorio.mkdir();
         }
 
+        nsga = new NSGAII(treinador);
+        
         output_fitness = new BufferedWriter(new FileWriter("./arquivos/fitness" 
                 + treinador + ".csv"));
         output_fitness.write("");
@@ -131,49 +133,6 @@ public class Treinador implements IJogador {
         }
         
         return verificaDirecao(minha,oponente, bolas[min_indice]);
-    }
-    
-    // cálculo do fitness
-    @Override
-    public void resultado(int ponto){
-        int fitness = 0;
-        
-        total += Math.abs(ponto);
-        if (ponto > 0){
-            fitness = MAIOR_FITNESS * ponto; // se marcou um ponto então ele é bom mesmo
-            pontos_jogador += ponto;
-        }
-        else if (ponto < 0){
-            pontos_adversario += ponto;
-        }
-        
-        fitness += contraatacou;
-        fitness += Configuracao.ALTURA_TELA - 3 * ultima_distancia;
-        bola_passou = false;
-        
-        if (populacao[atual].getFitness() != 0){
-            // faz uma média com o fitness antigo
-            populacao[atual].setFitness(populacao[atual].getFitness() + fitness);
-            populacao[atual].setFitness(populacao[atual].getFitness() / 2);
-        }
-        else{
-            populacao[atual].setFitness(fitness);
-        }
-        
-        contraatacou = 0;
-        
-        if (total >= Configuracao.MAX_PONTUACAO){
-            
-            try {
-                salvaPopulacao();
-            } catch (IOException ex) {
-                Logger.getLogger(Treinador.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            pontos_jogador = 0;
-            pontos_adversario = 0;
-            total = 0;
-        }
     }
     
     // cálculo do fitness
@@ -274,7 +233,7 @@ public class Treinador implements IJogador {
             output_fitness.append("\n");
             output_placar.append("\n");
             
-            repopularPopulacao(false);
+            repopularPopulacao();
             atual = 0;
             geracao++;
         }
@@ -283,41 +242,7 @@ public class Treinador implements IJogador {
         
     }
     
-    public void repopularPopulacao(){
-        
-        // ordena população
-        Arrays.sort(populacao);
-        
-        //torna os piores 3/4 nulos
-        for (int i = populacao.length/4 ; i < populacao.length ; i++){
-            populacao[i] = null;
-        }
-        
-        int j = 0;
-        int outro;
-        // preenche metade com os melhores + um genótipo aleatório da mesma geração
-        for (int i = populacao.length/4 ; i < 3*populacao.length/4 ; i++){
-            while (true){
-                outro = Configuracao.R.nextInt(populacao.length/4);
-                if (j != outro) break;
-            }
-            populacao[i] = new Genotipo(Genotipo.crossover(populacao[j], populacao[outro]));
-            j++;
-        }
-        
-        // adiciona alguns poucos genótipos com mutação
-        for (int i = 3*populacao.length/4 ; i < 7*populacao.length/8 ; i++){
-            outro = Configuracao.R.nextInt(populacao.length/2-1);
-            populacao[i] = new Genotipo(Genotipo.mutacao(populacao[outro]));
-        }
-        
-        // preenche o resto com novos genótipos aleatórios
-        for (int i = 7*populacao.length/8 ; i < populacao.length ; i++){
-            populacao[i] = Genotipo.genotipoAleatorio(-intervalo, intervalo);
-        }
-    }
-    
-    public void repopularPopulacao(boolean n) throws IOException{
+    public void repopularPopulacao() throws IOException{
         
         int i;
         

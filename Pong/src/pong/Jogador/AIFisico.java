@@ -59,9 +59,6 @@ public class AIFisico implements IJogador {
         
         return verificaDirecao(minha,oponente, bolas[min_indice]);
     }
-
-    @Override
-    public void resultado(int ponto) {}
     
     @Override
     public void resultado(int ponto_meu, int ponto_oponente) {}

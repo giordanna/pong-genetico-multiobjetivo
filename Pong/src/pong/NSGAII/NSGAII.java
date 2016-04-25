@@ -42,6 +42,9 @@ public class NSGAII {
         }
 
         fastNonDominatedSort(reuniao);
+        for (Frente x: frentes)
+            x.sort();
+        
         salvaFrentes(geracao);
         
         pais.clear();
@@ -54,8 +57,6 @@ public class NSGAII {
 
         if (pais.size() < N){
             if (j < frentes.size()){
-                frentes.get(j).sort();
-
                 int falta = N - pais.size();
 
                 for (i = 0 ; i < falta ; i++){
@@ -107,7 +108,10 @@ public class NSGAII {
             k++;
             if (frentes.size() - 1 < k ) frentes.add(new Frente());
             frentes.get(k).addAll(lista);
+            
         }
+        
+        if (frentes.get(k).getIndividuos().isEmpty()) frentes.remove(k);
     }
     
     public void salvaFrentes(int geracao) throws IOException{
