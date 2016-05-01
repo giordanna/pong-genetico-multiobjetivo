@@ -1,9 +1,9 @@
 package pong.NSGAII;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import pong.Jogador.Genotipo;
+import pong.Outros.Configuracao;
 
 public class Frente {
     private ArrayList<Genotipo> individuos;
@@ -30,25 +30,20 @@ public class Frente {
         return individuos.get(index);
     }
 
-    public void sort(){
+    public void crowdingDistance(){
         
         if (individuos.size() > 1) {
             
-            individuos.get(0).setDistancia(Double.POSITIVE_INFINITY);
-            individuos.get(individuos.size() - 1).setDistancia(Double.POSITIVE_INFINITY);
-            
-            Collections.sort(individuos, new TamanhoRaqueteComparator());
-
-            for (int j = 1; j < individuos.size() - 1; j++) {
-                individuos.get(j).setDistancia(individuos.get(j).getDistancia() +
-                        individuos.get(j + 1).getTamanhoRaquete() - individuos.get(j - 1).getTamanhoRaquete());
-            }
-            
-            Collections.sort(individuos, new ProbabilidadeComparator());
-            
-            for (int j = 1; j < individuos.size() - 1; j++) {
-                individuos.get(j).setDistancia(individuos.get(j).getDistancia() +
-                        individuos.get(j + 1).getProbabilidadeEspecial() - individuos.get(j - 1).getProbabilidadeEspecial());
+            for (int i = 0 ; i < Configuracao.NUM_OBJETIVOS ; i++){
+                individuos.get(0).setDistancia(Double.POSITIVE_INFINITY);
+                individuos.get(individuos.size() - 1).setDistancia(Double.POSITIVE_INFINITY);
+                
+                Collections.sort(individuos, FactoryComparator.getComparator(i));
+                
+                for (int j = 1; j < individuos.size() - 1; j++) {
+                    individuos.get(j).setDistancia(individuos.get(j).getDistancia() +
+                            individuos.get(j + 1).getObjetivo(i) - individuos.get(j - 1).getObjetivo(i));
+                }
             }
 
         } else {

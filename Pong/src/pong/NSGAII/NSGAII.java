@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collections;
 import pong.Jogador.Genotipo;
 
 public class NSGAII {
@@ -57,6 +58,7 @@ public class NSGAII {
 
         if (pais.size() < N) {
             if (j < frentes.size()) {
+
                 int falta = N - pais.size();
 
                 for (i = 0; i < falta; i++) {
@@ -125,13 +127,18 @@ public class NSGAII {
         output_frentes = new BufferedWriter(new FileWriter("./arquivos/frentes"
                 + numero + ".csv", true));
 
-        output_frentes.append("Geracao:" + geracao + "\n");
+        output_frentes.append("Geracao " + geracao + "\n");
         for (int i = 0; i < frentes.size(); i++) {
 
-            output_frentes.append("Frente:" + (i + 1) + "\n");
+            output_frentes.append("Frente " + (i + 1) + "\n");
 
             for (int j = 0; j < frentes.get(i).getIndividuos().size(); j++) {
 
+                output_frentes.append(String.valueOf(frentes.get(i).get(j).getBolasRebatidas()));
+                output_frentes.append("; ");
+                output_frentes.append(String.valueOf(frentes.get(i).get(j).getPorcentagemEspecial()).replace(".", ","));
+                output_frentes.append("; - ; ");
+                
                 for (double x : frentes.get(i).get(j).getGenes()) {
                     output_frentes.append(String.valueOf(x).replace(".", ","));
                     output_frentes.append("; ");
@@ -149,8 +156,10 @@ public class NSGAII {
     }
 
     private void calculateCrowdingDistances() {
-        for (Frente x: frentes) x.sort();
+        frentes.stream().forEach((x) -> {
+            x.crowdingDistance();
+            Collections.sort(x.getIndividuos(), new CrowdingDistanceComparator());
+        });
     }
-
-  
+ 
 }

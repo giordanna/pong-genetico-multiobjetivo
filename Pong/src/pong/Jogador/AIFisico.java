@@ -10,8 +10,6 @@ public class AIFisico implements IJogador {
     
     private Raquete raquete;
     
-    public AIFisico() {}
-    
     public AIFisico(int numero){
         raquete = new Raquete(numero);
     }

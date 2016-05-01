@@ -9,6 +9,10 @@ public class Raquete {
     private final int numero_raquete, largura = Configuracao.RAQUETE_LARGURA;
     private int altura = Configuracao.RAQUETE_ALTURA;
     private int x, y;
+    
+    private int bolas_rebatidas = 0;
+    private int especiais_rebatidas = 0;
+    private int especiais_total = 0;
 
     private int score;
 
@@ -24,6 +28,38 @@ public class Raquete {
         }
 
         this.y = Configuracao.ALTURA_TELA / 2 - this.altura / 2;
+        
+        bolas_rebatidas = 0;
+        especiais_rebatidas = 0;
+        especiais_total = 0;
+    }
+    
+    public int getBolasRebatidas() { return bolas_rebatidas; }
+    public int getEspeciaisRebatidas() { return especiais_rebatidas; }
+    public int getEspeciaisTotal() { return especiais_total; }
+    
+    public void setBolasRebatidas( int num ){
+        bolas_rebatidas = num;
+    }
+    
+    public void setEspeciaisRebatidas( int num ){
+        especiais_rebatidas = num;
+    }
+    
+    public void setEspeciaisTotal( int num ){
+        especiais_total = num;
+    }
+    
+    public void adicionaBolasRebatidas( int num ){
+        bolas_rebatidas += num;
+    }
+    
+    public void adicionaEspeciaisRebatidas( int num ){
+        especiais_rebatidas += num;
+    }
+    
+    public void adicionaEspeciaisTotal ( int num ){
+        especiais_total += num;
     }
     
     public int getLargura() { return largura; }

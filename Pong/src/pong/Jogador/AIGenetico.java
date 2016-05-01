@@ -21,10 +21,6 @@ public class AIGenetico implements IJogador {
     
     @Override
     public Raquete getRaquete() { return raquete; }
-    
-    public AIGenetico( Genotipo genotipo ){
-        this.genotipo = genotipo;
-    }
 
     @Override
     public int verificaDirecao(Raquete minha, Raquete oponente, Bola bola) {

@@ -61,7 +61,7 @@ public class Bola {
             // parede de cima
             if (this.movimentoY < 0) {
                 this.y = 0;
-                //this.movimentoY = R.nextInt(4);
+                
                 this.movimentoY = - this.movimentoY;
 
                 if (movimentoY == 0) {
@@ -69,7 +69,7 @@ public class Bola {
                 }
             // parede de baixo
             } else {
-                //this.movimentoY = -R.nextInt(4);
+
                 this.y = pong.altura - altura;
                 this.movimentoY = - this.movimentoY;
                 if (movimentoY == 0) {
@@ -80,7 +80,12 @@ public class Bola {
         // colisão com raquete da esquerda
         if (verificaColisao(raquete1) == 1) {
             this.movimentoX = 1 + (quantidade_colisoes / Configuracao.VELOCIDADE_BOLA);
-            //this.movimentoY = -2 + R.nextInt(4);
+            
+            raquete1.adicionaBolasRebatidas(1);
+            if (especial){
+                raquete1.adicionaEspeciaisRebatidas(1);
+                raquete1.adicionaEspeciaisTotal(1);
+            }
             
             verificaGrau(raquete1);
 
@@ -88,7 +93,12 @@ public class Bola {
         // colisão com raquete da direita
         } else if (verificaColisao(raquete2) == 1) {
             this.movimentoX = -1 - (quantidade_colisoes / Configuracao.VELOCIDADE_BOLA);
-            //this.movimentoY = -2 + R.nextInt(4);
+            
+            raquete2.adicionaBolasRebatidas(1);
+            if (especial){
+                raquete2.adicionaEspeciaisRebatidas(1);
+                raquete2.adicionaEspeciaisTotal(1);
+            }
             
             verificaGrau(raquete2);
 
@@ -97,10 +107,12 @@ public class Bola {
 
         if (verificaColisao(raquete1) == 2) {
             raquete2.atualizaScore(getPontos());
+            raquete1.adicionaEspeciaisTotal(1); // pra depois fazer a porcentagem
             criar();
             return -getPontos(); // jogador 2 marcou ponto
         } else if (verificaColisao(raquete2) == 2) {
             raquete1.atualizaScore(getPontos());
+            raquete2.adicionaEspeciaisTotal(1); // pra depois fazer a porcentagem
             criar();
             return getPontos(); // jogador 1 marcou ponto
         }

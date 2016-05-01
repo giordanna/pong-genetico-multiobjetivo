@@ -9,7 +9,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import pong.Bola;
@@ -117,7 +116,6 @@ public class Treinador implements IJogador {
         if (bola.getMovimentoX() == 0 && bola.getMovimentoY() == 0)
             return retornaInicio(minha);
         
-        contraatacou++;
         if (!bola_passou)
             ultima_distancia = distanciaPercorrida(minha, bola);
         
@@ -144,7 +142,13 @@ public class Treinador implements IJogador {
     @Override
     public void resultado(int ponto_meu, int ponto_oponente){
         
-        int fitness = 0;
+        int fitness;
+        
+        contraatacou = raquete.getBolasRebatidas() - populacao[atual].getBolasRebatidas();
+        
+        populacao[atual].setBolasRebatidas(raquete.getBolasRebatidas());
+        populacao[atual].setEspeciaisRebatidas(raquete.getEspeciaisRebatidas());
+        populacao[atual].setEspeciaisTotal(raquete.getEspeciaisTotal());
         
         total += ponto_meu + ponto_oponente;
         
@@ -154,7 +158,7 @@ public class Treinador implements IJogador {
         pontos_adversario += ponto_oponente;
         
         fitness += contraatacou;
-        fitness += 480 - 3 * ultima_distancia;
+        fitness += Configuracao.ALTURA_TELA - 3 * ultima_distancia;
         bola_passou = false;
         
         if (populacao[atual].getFitness() != 0){
@@ -166,8 +170,6 @@ public class Treinador implements IJogador {
             populacao[atual].setFitness(fitness);
         }
         
-        contraatacou = 0;
-        
         if (total >= Configuracao.MAX_PONTUACAO){
             
             try {
@@ -176,6 +178,9 @@ public class Treinador implements IJogador {
                 Logger.getLogger(Treinador.class.getName()).log(Level.SEVERE, null, ex);
             }
             
+            raquete.setBolasRebatidas(0);
+            raquete.setEspeciaisRebatidas(0);
+            raquete.setEspeciaisTotal(0);
             raquete.setAltura(populacao[atual].getTamanhoRaquete());
             
             pontos_jogador = 0;
@@ -239,7 +244,7 @@ public class Treinador implements IJogador {
             output_fitness.append("\n");
             output_placar.append("\n");
             
-            if (geracao < Configuracao.MAX_GERACOES) repopularPopulacao();
+            repopularPopulacao();
             atual = 0;
             geracao++;
         }
@@ -250,9 +255,12 @@ public class Treinador implements IJogador {
     
     public void geraFilhos(){
         int i;
+        // método utilizado no início
         
+        /*
         // ordena população
         Arrays.sort(populacao);
+        */
         
         //torna os piores 3/4 nulos
         for (i = populacao.length/4 ; i < populacao.length ; i++){
@@ -273,8 +281,14 @@ public class Treinador implements IJogador {
         
         // adiciona alguns poucos genótipos com mutação
         for (i = 3*populacao.length/4 ; i < populacao.length ; i++){
-            outro = Configuracao.R.nextInt(populacao.length/2-1);
+            outro = Configuracao.R.nextInt(3*populacao.length/4-1);
             populacao[i] = new Genotipo(Genotipo.mutacao(populacao[outro]));
+        }
+        
+        // começa fresh af
+        for (Genotipo x: populacao){
+            x.setBolasRebatidas(0);
+            x.setEspeciaisRebatidas(0);
         }
     }
     
@@ -285,19 +299,6 @@ public class Treinador implements IJogador {
         if (geracao == 1){
             for (i = 0 ; i < populacao.length ; i++)
                 oldpop[i] = new Genotipo (populacao[i]);
-            
-            ArrayList<Genotipo> populacaoNSGA = new ArrayList<>();
-            for (Genotipo x: populacao)
-                populacaoNSGA.add(new Genotipo(x));
-            
-            nsga.NSGAII(populacaoNSGA, populacaoNSGA, populacao.length, geracao);
-        
-            for (i = 0 ; i < populacao.length ; i ++){
-                populacao[i] = new Genotipo(populacaoNSGA.get(i));
-            }
-
-            geraFilhos();
-            
         }
         else{
             ArrayList<Genotipo> populacaoNSGA = new ArrayList<>();
@@ -307,18 +308,19 @@ public class Treinador implements IJogador {
             ArrayList<Genotipo> filhosNSGA = new ArrayList<>();
             for (Genotipo x: populacao)
                 filhosNSGA.add(new Genotipo(x));
-
-            nsga.NSGAII(populacaoNSGA, filhosNSGA, populacao.length, geracao);
-        
-            // salva oldpop
+            
+            // salva oldpop antes do nsga
             for (i = 0 ; i < populacao.length ; i++)
                 oldpop[i] = new Genotipo(populacao[i]);
+
+            nsga.NSGAII(populacaoNSGA, filhosNSGA, populacao.length, geracao);
             
+            // a nova
             for (i = 0 ; i < populacao.length ; i ++){
                 populacao[i] = new Genotipo(populacaoNSGA.get(i));
             }
-
-            geraFilhos();
         }
+        
+        geraFilhos();
     }
 }

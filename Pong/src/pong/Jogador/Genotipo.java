@@ -15,6 +15,10 @@ public class Genotipo implements Comparable<Genotipo>{
     private int dominantes = 0; // número de indivíduos que domina este genotipo
     private double distancia;
     
+    private int bolas_rebatidas = 0;
+    private int especiais_rebatidas = 0;
+    private int especiais_total = 0;
+    
     
     public Genotipo(){
         gene = new double[Configuracao.TAMANHO_CROMOSSOMO];
@@ -24,6 +28,10 @@ public class Genotipo implements Comparable<Genotipo>{
         dominados = new ArrayList<>();
         dominantes = 0;
         distancia = Integer.MAX_VALUE;
+        
+        bolas_rebatidas = 0;
+        especiais_rebatidas = 0;
+        especiais_total = 0;
         
     }
     
@@ -42,6 +50,10 @@ public class Genotipo implements Comparable<Genotipo>{
         dominantes = 0;
         
         distancia = Integer.MAX_VALUE;
+        
+        bolas_rebatidas = 0;
+        especiais_rebatidas = 0;
+        especiais_total = 0;
     }
     
     public Genotipo( Genotipo copia ){
@@ -54,7 +66,33 @@ public class Genotipo implements Comparable<Genotipo>{
         this.dominantes = copia.dominantes;
         
         distancia = copia.distancia;
+        
+        bolas_rebatidas = copia.bolas_rebatidas;
+        especiais_rebatidas = copia.especiais_rebatidas;
+        especiais_total = copia.especiais_total;
 
+    }
+    
+    public int getBolasRebatidas() { return bolas_rebatidas; }
+    public int getEspeciaisRebatidas() { return especiais_rebatidas; }
+    public int getEspeciaisTotal() { return especiais_total; }
+    
+    public double getPorcentagemEspecial(){
+        // evitar divisão por zero (pouco provável)
+        if (especiais_total == 0) especiais_total = 1;
+        return (especiais_rebatidas * 1f)/especiais_total;
+    }
+    
+    public void setBolasRebatidas( int num ){
+        bolas_rebatidas = num;
+    }
+    
+    public void setEspeciaisRebatidas( int num ){
+        especiais_rebatidas = num;
+    }
+    
+    public void setEspeciaisTotal( int num ){
+        especiais_total = num;
     }
     
     public double getDistancia() { return distancia; }
@@ -160,10 +198,9 @@ public class Genotipo implements Comparable<Genotipo>{
     }
     
     public boolean domina( Genotipo outro ){
-        // raquete menor
-        if (this.gene[3] < outro.gene[3]){
-            // prioridade na bola colorida
-            return (this.gene[4] < outro.gene[4]);
+
+        if (this.getPorcentagemEspecial() > outro.getPorcentagemEspecial()){
+            return (this.bolas_rebatidas > outro.bolas_rebatidas);
         }
         return false;
     }
@@ -172,7 +209,7 @@ public class Genotipo implements Comparable<Genotipo>{
     public boolean equals(Object o){
         if (o instanceof Genotipo){
             Genotipo outro = (Genotipo) o;
-            for (int i = 3 ; i < this.gene.length ; i++)
+            for (int i = 0 ; i < this.gene.length ; i++)
                 if (this.gene[i] != outro.gene[i]) return false;
             return true;
         }
@@ -184,5 +221,16 @@ public class Genotipo implements Comparable<Genotipo>{
         int hash = 7;
         hash = 89 * hash + Arrays.hashCode(this.gene);
         return hash;
+    }
+
+    public double getObjetivo(int objetivo) {
+        switch (objetivo){
+            case 0:
+                return getBolasRebatidas(); 
+            case 1:
+                return getPorcentagemEspecial();
+            default:
+                return 0;
+        }
     }
 }

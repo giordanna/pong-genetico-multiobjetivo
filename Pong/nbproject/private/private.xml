@@ -5,17 +5,18 @@
         <group>
             <file>file:/C:/Users/User/Desktop/pong-gen-tico-multiobjetivo/Pong/src/pong/Jogador/AIGenetico.java</file>
             <file>file:/C:/Users/User/Desktop/pong-gen-tico-multiobjetivo/Pong/src/pong/Outros/Configuracao.java</file>
+            <file>file:/C:/Users/User/Desktop/pong-gen-tico-multiobjetivo/Pong/src/pong/NSGAII/CrowdingDistanceComparator.java</file>
             <file>file:/C:/Users/User/Desktop/pong-gen-tico-multiobjetivo/Pong/src/pong/Jogador/Genotipo.java</file>
-            <file>file:/C:/Users/User/Desktop/pong-gen-tico-multiobjetivo/Pong/src/pong/NSGAII/ProbabilidadeComparator.java</file>
             <file>file:/C:/Users/User/Desktop/pong-gen-tico-multiobjetivo/Pong/src/pong/Raquete.java</file>
+            <file>file:/C:/Users/User/Desktop/pong-gen-tico-multiobjetivo/Pong/src/pong/NSGAII/FactoryComparator.java</file>
             <file>file:/C:/Users/User/Desktop/pong-gen-tico-multiobjetivo/Pong/src/pong/Pong.java</file>
             <file>file:/C:/Users/User/Desktop/pong-gen-tico-multiobjetivo/Pong/src/pong/Jogador/IJogador.java</file>
             <file>file:/C:/Users/User/Desktop/pong-gen-tico-multiobjetivo/Pong/src/pong/Jogador/AIBasico.java</file>
             <file>file:/C:/Users/User/Desktop/pong-gen-tico-multiobjetivo/Pong/src/pong/Bola.java</file>
+            <file>file:/C:/Users/User/Desktop/pong-gen-tico-multiobjetivo/Pong/src/pong/NSGAII/PorcentagemEspecialComparator.java</file>
             <file>file:/C:/Users/User/Desktop/pong-gen-tico-multiobjetivo/Pong/src/pong/Jogador/Humano.java</file>
             <file>file:/C:/Users/User/Desktop/pong-gen-tico-multiobjetivo/Pong/src/pong/Jogador/AIFisico.java</file>
             <file>file:/C:/Users/User/Desktop/pong-gen-tico-multiobjetivo/Pong/src/pong/NSGAII/Frente.java</file>
-            <file>file:/C:/Users/User/Desktop/pong-gen-tico-multiobjetivo/Pong/src/pong/NSGAII/TamanhoRaqueteComparator.java</file>
             <file>file:/C:/Users/User/Desktop/pong-gen-tico-multiobjetivo/Pong/src/pong/Jogador/Treinador.java</file>
             <file>file:/C:/Users/User/Desktop/pong-gen-tico-multiobjetivo/Pong/src/pong/NSGAII/NSGAII.java</file>
         </group>

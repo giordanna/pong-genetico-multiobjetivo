@@ -10,8 +10,6 @@ public class AIBasico implements IJogador {
     
     private Raquete raquete;
     
-    public AIBasico() {}
-    
     public AIBasico(int numero){
         raquete = new Raquete(numero);
     }

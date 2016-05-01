@@ -16,6 +16,8 @@ public class Configuracao {
     
     public static MersenneTwisterFast R = new MersenneTwisterFast();
     
+    public static final int NUM_OBJETIVOS = 2;
+    
     public static int LARGURA_TELA = 800;
     public static int ALTURA_TELA = 600;
     
@@ -23,12 +25,11 @@ public class Configuracao {
     public static int RAQUETE_ALTURA = 150;
     public static int BOLA_RAIO = 20;
     
-    public static int MAX_ALTURA_RAQUETE = 3 * LARGURA_TELA / 10;
+    public static int MAX_ALTURA_RAQUETE = 2 * ALTURA_TELA / 5;
     public static int MIN_ALTURA_RAQUETE = RAQUETE_ALTURA / 2;
     
     public static int QUANTIDADE_BOLAS = 5;   
     public static int PTS_BOLA_ESPECIAL = QUANTIDADE_BOLAS * 2;
-    public static int MAX_PONTUACAO = (PTS_BOLA_ESPECIAL + QUANTIDADE_BOLAS - 1) * 3;
 
     public static int VELOCIDADE_RAQUETE_PADRAO = 15;
     private static double valor = VELOCIDADE_RAQUETE_PADRAO;
@@ -41,8 +42,9 @@ public class Configuracao {
     public static int TAMANHO_CROMOSSOMO = 5;
     public static int MAX_POPULACAO = 30;
     public static double INTERVALO_GENES = 1.5;
-    public static int RODADA = 3;
-    public static int MAX_GERACOES = 100;
+    public static int RODADAS = 3;
+    public static int MAX_PONTUACAO = (PTS_BOLA_ESPECIAL + QUANTIDADE_BOLAS - 1) * RODADAS;
+    public static int MAX_GERACOES = 500;
     
     public static Font FONTE_TIPO;
 
@@ -81,14 +83,14 @@ public class Configuracao {
             TAMANHO_CROMOSSOMO = config.get(8).intValue();
             MAX_POPULACAO = config.get(9).intValue();
             INTERVALO_GENES = config.get(10);
-            RODADA = config.get(11).intValue();
+            RODADAS = config.get(11).intValue();
             MAX_GERACOES = config.get(12).intValue();
             
             // reconfigura os outros valores que dependem de outros aspectos
-            MAX_ALTURA_RAQUETE = 3 * LARGURA_TELA / 10;
+            MAX_ALTURA_RAQUETE = 2 * ALTURA_TELA / 5;
             MIN_ALTURA_RAQUETE = RAQUETE_ALTURA / 2;
             PTS_BOLA_ESPECIAL = QUANTIDADE_BOLAS * 2;
-            MAX_PONTUACAO = (PTS_BOLA_ESPECIAL + QUANTIDADE_BOLAS - 1) * 3;
+            MAX_PONTUACAO = (PTS_BOLA_ESPECIAL + QUANTIDADE_BOLAS - 1) * RODADAS;
             valor = VELOCIDADE_RAQUETE_PADRAO;
             MAX_VELOCIDADE_RAQUETE = (int) valor * RAQUETE_ALTURA/MIN_ALTURA_RAQUETE;
             MIN_VELOCIDADE_RAQUETE = (int) valor * RAQUETE_ALTURA/MAX_ALTURA_RAQUETE;  
