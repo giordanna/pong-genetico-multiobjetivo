@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import pong.Bola;
@@ -257,11 +258,6 @@ public class Treinador implements IJogador {
         int i;
         // método utilizado no início
         
-        /*
-        // ordena população
-        Arrays.sort(populacao);
-        */
-        
         //torna os piores 3/4 nulos
         for (i = populacao.length/4 ; i < populacao.length ; i++){
             populacao[i] = null;
@@ -299,6 +295,7 @@ public class Treinador implements IJogador {
         if (geracao == 1){
             for (i = 0 ; i < populacao.length ; i++)
                 oldpop[i] = new Genotipo (populacao[i]);
+            Arrays.sort(populacao);
         }
         else{
             ArrayList<Genotipo> populacaoNSGA = new ArrayList<>();
